@@ -14,6 +14,9 @@ function LookupContent() {
   const [result, setResult] = useState<LookupResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [quoteFormData, setQuoteFormData] = useState({ name: '', phone: '', email: '' });
+  const [quoteSubmitted, setQuoteSubmitted] = useState(false);
 
   const serviceParam = searchParams.get('service') || '';
   const zipParam = searchParams.get('zip') || '';
@@ -29,6 +32,9 @@ function LookupContent() {
   const fetchResults = async (service: string, zip: string, quote?: number) => {
     setLoading(true);
     setError('');
+    setShowQuoteForm(false);
+    setQuoteSubmitted(false);
+    setQuoteFormData({ name: '', phone: '', email: '' });
     try {
       const params = new URLSearchParams({ service, zip });
       if (quote) params.set('quote', String(quote));
@@ -150,15 +156,101 @@ function LookupContent() {
 
               {/* Get 3 Quotes CTA */}
               <div className="card bg-gradient-to-r from-blue-50 to-blue-50 border-blue-200">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">📊 Want Better Quotes?</h3>
-                    <p className="text-gray-600 text-sm">Get connected to 2-3 vetted local professionals for free quotes.</p>
+                {!showQuoteForm && !quoteSubmitted && (
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">📊 Want Better Quotes?</h3>
+                      <p className="text-gray-600 text-sm">Get connected to 2-3 vetted local professionals for free quotes.</p>
+                    </div>
+                    <button
+                      onClick={() => setShowQuoteForm(true)}
+                      className="btn-primary whitespace-nowrap"
+                    >
+                      Get 3 Free Quotes
+                    </button>
                   </div>
-                  <button className="btn-primary whitespace-nowrap">
-                    Get 3 Free Quotes
-                  </button>
-                </div>
+                )}
+
+                {showQuoteForm && !quoteSubmitted && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">📊 Get Free Quotes</h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Enter your details and we&apos;ll connect you with 2-3 vetted local professionals for <span className="font-semibold capitalize">{result.serviceType}</span> near {result.zipCode}.
+                    </p>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        setQuoteSubmitted(true);
+                        setShowQuoteForm(false);
+                      }}
+                      className="space-y-3"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input
+                          type="text"
+                          placeholder="Your Name"
+                          value={quoteFormData.name}
+                          onChange={(e) => setQuoteFormData(prev => ({ ...prev, name: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white text-sm"
+                          required
+                        />
+                        <input
+                          type="tel"
+                          placeholder="Phone Number"
+                          value={quoteFormData.phone}
+                          onChange={(e) => setQuoteFormData(prev => ({ ...prev, phone: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white text-sm"
+                          required
+                        />
+                        <input
+                          type="email"
+                          placeholder="Email Address"
+                          value={quoteFormData.email}
+                          onChange={(e) => setQuoteFormData(prev => ({ ...prev, email: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white text-sm"
+                          required
+                        />
+                      </div>
+                      <div className="flex gap-3">
+                        <button type="submit" className="btn-primary text-sm !py-2.5">
+                          Send Me Quotes
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowQuoteForm(false)}
+                          className="text-sm text-gray-500 hover:text-gray-700"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-400">No spam. Professionals will contact you within 24 hours.</p>
+                    </form>
+                  </div>
+                )}
+
+                {quoteSubmitted && (
+                  <div className="text-center py-4">
+                    <div className="text-3xl mb-2">✅</div>
+                    <h3 className="text-lg font-semibold text-emerald-700">Request Submitted!</h3>
+                    <p className="text-gray-600 text-sm mt-1">
+                      2-3 vetted professionals for <span className="font-semibold capitalize">{result.serviceType}</span> near {result.zipCode} will contact you within 24 hours with their best quotes.
+                    </p>
+                    {result.contractors.length > 0 && (
+                      <div className="mt-4 text-left bg-white rounded-lg p-4 border border-gray-200">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Top-rated contractors in your area:</p>
+                        <ul className="space-y-1">
+                          {result.contractors.slice(0, 3).map((c) => (
+                            <li key={c.companyName} className="text-sm text-gray-600 flex items-center gap-2">
+                              <span className="text-emerald-500">●</span>
+                              <span className="font-medium">{c.companyName}</span>
+                              <span className="text-xs text-gray-400">(Fairness: {c.fairnessScore}/100)</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </>
           ) : (
