@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   const serviceType = searchParams.get('service');
   const zipCode = searchParams.get('zip');
   const quoteParam = searchParams.get('quote');
+  const categoryId = searchParams.get('category') || undefined;
 
   if (!serviceType || !zipCode) {
     return NextResponse.json(
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = lookupPrice(serviceType, zipCode, userQuote);
+  const result = lookupPrice(serviceType, zipCode, userQuote, categoryId);
 
   return NextResponse.json(result);
 }
