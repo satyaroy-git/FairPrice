@@ -60,7 +60,7 @@ function LookupContent() {
 
       {loading && (
         <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="text-gray-500 mt-4">Looking up prices...</p>
         </div>
       )}
@@ -137,7 +137,7 @@ function LookupContent() {
               <ContractorTable contractors={result.contractors} />
 
               {/* Get 3 Quotes CTA */}
-              <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-primary-200">
+              <div className="card bg-gradient-to-r from-blue-50 to-blue-50 border-blue-200">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">📊 Want Better Quotes?</h3>
@@ -178,7 +178,7 @@ export default function LookupPage() {
   return (
     <Suspense fallback={
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
       </div>
     }>
       <LookupContent />

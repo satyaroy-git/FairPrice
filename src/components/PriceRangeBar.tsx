@@ -30,10 +30,10 @@ export default function PriceRangeBar({ low, average, high, userQuote }: PriceRa
         {/* User quote marker */}
         {quotePosition !== undefined && (
           <div
-            className="absolute -top-1 h-6 w-1 bg-primary-600 rounded-full shadow-md"
+            className="absolute -top-1 h-6 w-1 bg-blue-600 rounded-full shadow-md"
             style={{ left: `${quotePosition}%` }}
           >
-            <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-primary-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap">
+            <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap">
               Your quote
             </div>
           </div>

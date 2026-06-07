@@ -19,10 +19,10 @@ export default function RootLayout({
             <div className="flex justify-between items-center h-16">
               <a href="/" className="flex items-center space-x-2">
                 <span className="text-2xl">💰</span>
-                <span className="text-xl font-bold text-primary-700">FairPrice</span>
+                <span className="text-xl font-bold text-blue-700">FairPrice</span>
               </a>
               <div className="flex items-center space-x-6">
-                <a href="/lookup" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">
+                <a href="/lookup" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Look Up Price
                 </a>
                 <a href="/submit" className="btn-primary text-sm !py-2 !px-4">
