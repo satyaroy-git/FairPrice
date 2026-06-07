@@ -1,4 +1,5 @@
 import { PriceSubmission, PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType } from './types';
+import { detectCurrency } from './currency';
 import { submissions } from '@/data/submissions';
 
 /**
@@ -140,10 +141,12 @@ export function lookupPrice(
   const priceRange = calculatePriceRange(filteredSubmissions, userQuote);
   const breakdown = generateBreakdown(filteredSubmissions);
   const contractors = calculateContractorScores(filteredSubmissions, priceRange.average);
+  const currency = detectCurrency(zipCode);
 
   return {
     serviceType: normalizedService,
     zipCode,
+    currency,
     priceRange,
     breakdown,
     contractors,

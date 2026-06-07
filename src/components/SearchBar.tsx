@@ -48,7 +48,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
           <div className="w-full md:w-40">
             <input
               type="number"
-              placeholder="Your quote ($)"
+              placeholder="Your quote (amount)"
               value={quote}
               onChange={(e) => setQuote(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
