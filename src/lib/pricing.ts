@@ -1,6 +1,7 @@
-import { PriceSubmission, PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType } from './types';
+import { PriceSubmission, PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing } from './types';
 import { detectCurrency } from './currency';
 import { submissions } from '@/data/submissions';
+import { categories } from '@/data/categories';
 
 /**
  * Get nearby ZIP/PIN codes (uses first 3 digits for area matching)
@@ -126,7 +127,8 @@ export function lookupPrice(
   serviceType: string,
   zipCode: string,
   userQuote?: number,
-  categoryId?: string
+  categoryId?: string,
+  units?: number
 ): LookupResult {
   const normalizedService = serviceType.toLowerCase().trim();
   const nearbyZips = getNearbyZips(zipCode);
@@ -145,11 +147,48 @@ export function lookupPrice(
   const contractors = calculateContractorScores(filteredSubmissions, priceRange.average);
   const currency = detectCurrency(zipCode);
 
+  // Calculate unit pricing if units provided
+  let unitPricing: UnitPricing | undefined;
+  if (units && units > 0 && priceRange.submissionCount > 0) {
+    // Find the unit label from categories
+    let unitLabel = 'units';
+    for (const cat of categories) {
+      for (const sub of cat.subcategories) {
+        if (sub.unitConfig) {
+          const matchesSubService = sub.serviceTypes.some(st =>
+            st.toLowerCase().includes(normalizedService) ||
+            normalizedService.includes(st.toLowerCase())
+          );
+          if (matchesSubService) {
+            unitLabel = sub.unitConfig.unit;
+            break;
+          }
+        }
+      }
+    }
+
+    const perUnitLow = Math.round(priceRange.low / 1); // base prices are per-unit in seed data
+    const perUnitAverage = Math.round(priceRange.average / 1);
+    const perUnitHigh = Math.round(priceRange.high / 1);
+
+    unitPricing = {
+      units,
+      unitLabel,
+      perUnitLow,
+      perUnitAverage,
+      perUnitHigh,
+      totalEstimateLow: Math.round(perUnitLow * units),
+      totalEstimateAverage: Math.round(perUnitAverage * units),
+      totalEstimateHigh: Math.round(perUnitHigh * units),
+    };
+  }
+
   return {
     serviceType: normalizedService,
     zipCode,
     currency,
     priceRange,
+    unitPricing,
     breakdown,
     contractors,
     recentSubmissions: filteredSubmissions.slice(0, 5),
