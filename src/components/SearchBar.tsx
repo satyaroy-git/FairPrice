@@ -35,12 +35,12 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
         <div className="w-full md:w-36">
           <input
             type="text"
-            placeholder="ZIP Code"
+            placeholder="PIN/ZIP Code"
             value={zip}
-            onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+            onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 6))}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
-            pattern="\d{5}"
-            maxLength={5}
+            pattern="\d{5,6}"
+            maxLength={6}
             required
           />
         </div>
