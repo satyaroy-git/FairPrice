@@ -41,11 +41,23 @@ export interface CurrencyInfo {
   country: string;
 }
 
+export interface UnitPricing {
+  units: number;
+  unitLabel: string;
+  perUnitLow: number;
+  perUnitAverage: number;
+  perUnitHigh: number;
+  totalEstimateLow: number;
+  totalEstimateAverage: number;
+  totalEstimateHigh: number;
+}
+
 export interface LookupResult {
   serviceType: string;
   zipCode: string;
   currency: CurrencyInfo;
   priceRange: PriceRange;
+  unitPricing?: UnitPricing;
   breakdown: BreakdownItem[];
   contractors: ContractorScore[];
   recentSubmissions: PriceSubmission[];

@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   const serviceType = searchParams.get('service');
   const zipCode = searchParams.get('zip');
   const quoteParam = searchParams.get('quote');
+  const unitsParam = searchParams.get('units');
   const categoryId = searchParams.get('category') || undefined;
 
   if (!serviceType || !zipCode) {
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
   }
 
   const userQuote = quoteParam ? parseFloat(quoteParam) : undefined;
+  const units = unitsParam ? parseFloat(unitsParam) : undefined;
 
   if (userQuote !== undefined && (isNaN(userQuote) || userQuote <= 0)) {
     return NextResponse.json(
@@ -31,7 +33,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = lookupPrice(serviceType, zipCode, userQuote, categoryId);
+  const result = lookupPrice(serviceType, zipCode, userQuote, categoryId, units);
 
   return NextResponse.json(result);
 }

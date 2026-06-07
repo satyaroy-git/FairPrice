@@ -21,15 +21,16 @@ function LookupContent() {
   const serviceParam = searchParams.get('service') || '';
   const zipParam = searchParams.get('zip') || '';
   const quoteParam = searchParams.get('quote') || '';
+  const unitsParam = searchParams.get('units') || '';
 
   useEffect(() => {
     if (serviceParam && zipParam) {
-      fetchResults(serviceParam, zipParam, quoteParam ? parseFloat(quoteParam) : undefined);
+      fetchResults(serviceParam, zipParam, quoteParam ? parseFloat(quoteParam) : undefined, unitsParam ? parseFloat(unitsParam) : undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceParam, zipParam, quoteParam]);
+  }, [serviceParam, zipParam, quoteParam, unitsParam]);
 
-  const fetchResults = async (service: string, zip: string, quote?: number) => {
+  const fetchResults = async (service: string, zip: string, quote?: number, units?: number) => {
     setLoading(true);
     setError('');
     setShowQuoteForm(false);
@@ -38,6 +39,7 @@ function LookupContent() {
     try {
       const params = new URLSearchParams({ service, zip });
       if (quote) params.set('quote', String(quote));
+      if (units) params.set('units', String(units));
       const response = await fetch(`/api/lookup?${params.toString()}`);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
@@ -49,9 +51,10 @@ function LookupContent() {
     }
   };
 
-  const handleSearch = (service: string, zip: string, quote?: number) => {
+  const handleSearch = (service: string, zip: string, quote?: number, units?: number) => {
     const params = new URLSearchParams({ service, zip });
     if (quote) params.set('quote', String(quote));
+    if (units) params.set('units', String(units));
     router.push(`/lookup?${params.toString()}`);
   };
 
@@ -128,6 +131,35 @@ function LookupContent() {
                   currency={result.currency}
                 />
               </div>
+
+              {/* Unit Pricing */}
+              {result.unitPricing && (
+                <div className="card bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    📐 Price Estimate for {result.unitPricing.units} {result.unitPricing.unitLabel}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <p className="text-sm text-gray-500 mb-1">Per {result.unitPricing.unitLabel} rate</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-emerald-600 font-semibold">{formatPrice(result.unitPricing.perUnitLow)}</span>
+                        <span className="text-gray-400">—</span>
+                        <span className="text-red-600 font-semibold">{formatPrice(result.unitPricing.perUnitHigh)}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">Avg: {formatPrice(result.unitPricing.perUnitAverage)} / {result.unitPricing.unitLabel}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-indigo-200">
+                      <p className="text-sm text-gray-500 mb-1">Total estimate ({result.unitPricing.units} {result.unitPricing.unitLabel})</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-emerald-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateLow)}</span>
+                        <span className="text-gray-400">—</span>
+                        <span className="text-red-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateHigh)}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">Avg total: {formatPrice(result.unitPricing.totalEstimateAverage)}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Breakdown */}
               {result.breakdown.length > 0 && (
