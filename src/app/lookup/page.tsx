@@ -22,6 +22,7 @@ function LookupContent() {
   const zipParam = searchParams.get('zip') || '';
   const quoteParam = searchParams.get('quote') || '';
   const unitsParam = searchParams.get('units') || '';
+  const categoryParam = searchParams.get('category') || '';
 
   useEffect(() => {
     if (serviceParam && zipParam) {
@@ -69,7 +70,7 @@ function LookupContent() {
       <p className="text-gray-600 mb-8">Enter a service and ZIP/PIN code to see fair prices in your area</p>
 
       <div className="card mb-8">
-        <SearchBar onSearch={handleSearch} initialService={serviceParam} />
+        <SearchBar onSearch={handleSearch} initialService={serviceParam} lockedCategory={categoryParam || undefined} />
       </div>
 
       {loading && (

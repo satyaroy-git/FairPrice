@@ -7,10 +7,11 @@ interface SearchBarProps {
   onSearch: (service: string, zip: string, quote?: number, units?: number) => void;
   showQuoteField?: boolean;
   initialService?: string;
+  lockedCategory?: string; // If set, only show this category (from Browse by Category)
 }
 
-export default function SearchBar({ onSearch, showQuoteField = true, initialService = '' }: SearchBarProps) {
-  const [selectedCategory, setSelectedCategory] = useState('');
+export default function SearchBar({ onSearch, showQuoteField = true, initialService = '', lockedCategory }: SearchBarProps) {
+  const [selectedCategory, setSelectedCategory] = useState(lockedCategory || '');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [service, setService] = useState(initialService);
   const [zip, setZip] = useState('');
@@ -19,6 +20,13 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [serviceTypes, setServiceTypes] = useState<string[]>([]);
   const [unitConfig, setUnitConfig] = useState<UnitConfig | null>(null);
+
+  // Initialize with locked category on mount or when lockedCategory changes
+  useEffect(() => {
+    if (lockedCategory) {
+      setSelectedCategory(lockedCategory);
+    }
+  }, [lockedCategory]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -75,14 +83,23 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100"
+              disabled={!!lockedCategory}
             >
               <option value="">Select Category</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.icon} {cat.name}
-                </option>
-              ))}
+              {lockedCategory ? (
+                categories.filter(c => c.id === lockedCategory).map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon} {cat.name}
+                  </option>
+                ))
+              ) : (
+                categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon} {cat.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
           <div className="flex-1">
