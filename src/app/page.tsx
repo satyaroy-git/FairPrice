@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-4">Browse by Category</h2>
           <p className="text-gray-600 text-center mb-10">Select a category to explore prices in your area</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {categories.map((category) => (
               <CategoryCard
                 key={category.id}
@@ -97,16 +97,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-blue-600">38+</div>
+              <div className="text-3xl font-bold text-blue-600">146+</div>
               <div className="text-gray-600 mt-1">Price Reports</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600">8</div>
+              <div className="text-3xl font-bold text-blue-600">14</div>
               <div className="text-gray-600 mt-1">Service Categories</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600">12+</div>
-              <div className="text-gray-600 mt-1">ZIP Codes Covered</div>
+              <div className="text-3xl font-bold text-blue-600">15+</div>
+              <div className="text-gray-600 mt-1">PIN/ZIP Codes Covered</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-blue-600">95%</div>

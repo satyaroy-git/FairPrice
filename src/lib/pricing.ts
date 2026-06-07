@@ -125,17 +125,19 @@ function calculateContractorScores(
 export function lookupPrice(
   serviceType: string,
   zipCode: string,
-  userQuote?: number
+  userQuote?: number,
+  categoryId?: string
 ): LookupResult {
   const normalizedService = serviceType.toLowerCase().trim();
   const nearbyZips = getNearbyZips(zipCode);
 
-  // Find matching submissions (fuzzy match on service type)
+  // Find matching submissions (fuzzy match on service type + optional category filter)
   const filteredSubmissions = submissions.filter(s => {
     const matchesService = s.serviceType.toLowerCase().includes(normalizedService) ||
       normalizedService.includes(s.serviceType.toLowerCase());
     const matchesArea = nearbyZips.includes(s.zipCode);
-    return matchesService && matchesArea;
+    const matchesCategory = categoryId ? s.categoryId === categoryId : true;
+    return matchesService && matchesArea && matchesCategory;
   });
 
   const priceRange = calculatePriceRange(filteredSubmissions, userQuote);

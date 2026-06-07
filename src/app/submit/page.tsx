@@ -1,21 +1,46 @@
 'use client';
 
-import { useState } from 'react';
-import { categories } from '@/data/categories';
+import { useState, useEffect } from 'react';
+import { categories, SubCategory } from '@/data/categories';
 
 export default function SubmitPage() {
   const [formData, setFormData] = useState({
     serviceType: '',
     categoryId: '',
+    subcategoryId: '',
     zipCode: '',
     pricePaid: '',
     companyName: '',
     jobDescription: '',
   });
+  const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
+  const [serviceTypes, setServiceTypes] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [trustPoints, setTrustPoints] = useState(0);
+
+  useEffect(() => {
+    if (formData.categoryId) {
+      const cat = categories.find(c => c.id === formData.categoryId);
+      setSubcategories(cat?.subcategories || []);
+      setFormData(prev => ({ ...prev, subcategoryId: '', serviceType: '' }));
+      setServiceTypes([]);
+    } else {
+      setSubcategories([]);
+      setServiceTypes([]);
+    }
+  }, [formData.categoryId]);
+
+  useEffect(() => {
+    if (formData.subcategoryId && formData.categoryId) {
+      const cat = categories.find(c => c.id === formData.categoryId);
+      const sub = cat?.subcategories.find(s => s.id === formData.subcategoryId);
+      setServiceTypes(sub?.serviceTypes || []);
+    } else {
+      setServiceTypes([]);
+    }
+  }, [formData.subcategoryId, formData.categoryId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -32,8 +57,12 @@ export default function SubmitPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          serviceType: formData.serviceType,
+          categoryId: formData.categoryId,
+          zipCode: formData.zipCode,
           pricePaid: parseFloat(formData.pricePaid),
+          companyName: formData.companyName || undefined,
+          jobDescription: formData.jobDescription || undefined,
         }),
       });
 
@@ -45,6 +74,7 @@ export default function SubmitPage() {
       setFormData({
         serviceType: '',
         categoryId: '',
+        subcategoryId: '',
         zipCode: '',
         pricePaid: '',
         companyName: '',
@@ -120,21 +150,63 @@ export default function SubmitPage() {
             </select>
           </div>
 
+          {/* Subcategory */}
+          {subcategories.length > 0 && (
+            <div>
+              <label htmlFor="subcategoryId" className="block text-sm font-medium text-gray-700 mb-1">
+                Subcategory *
+              </label>
+              <select
+                id="subcategoryId"
+                name="subcategoryId"
+                value={formData.subcategoryId}
+                onChange={handleChange}
+                className="input-field"
+                required
+              >
+                <option value="">Select a subcategory</option>
+                {subcategories.map(sub => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Service Type */}
           <div>
             <label htmlFor="serviceType" className="block text-sm font-medium text-gray-700 mb-1">
               Service Type *
             </label>
-            <input
-              type="text"
-              id="serviceType"
-              name="serviceType"
-              value={formData.serviceType}
-              onChange={handleChange}
-              placeholder="e.g., water heater replacement, brake pads, root canal"
-              className="input-field"
-              required
-            />
+            {serviceTypes.length > 0 ? (
+              <select
+                id="serviceType"
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleChange}
+                className="input-field"
+                required
+              >
+                <option value="">Select service type</option>
+                {serviceTypes.map(st => (
+                  <option key={st} value={st}>
+                    {st.charAt(0).toUpperCase() + st.slice(1)}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                id="serviceType"
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleChange}
+                placeholder="e.g., water heater replacement, brake pads, root canal"
+                className="input-field"
+                required
+              />
+            )}
           </div>
 
           {/* ZIP Code */}
@@ -159,7 +231,8 @@ export default function SubmitPage() {
           {/* Price Paid */}
           <div>
             <label htmlFor="pricePaid" className="block text-sm font-medium text-gray-700 mb-1">
-              What You Paid ($) *
+              What You Paid *
+              <span className="text-gray-400 ml-1">(in local currency)</span>
             </label>
             <input
               type="number"
@@ -167,7 +240,7 @@ export default function SubmitPage() {
               name="pricePaid"
               value={formData.pricePaid}
               onChange={handleChange}
-              placeholder="e.g., 1400"
+              placeholder="e.g., 1400 or 8500"
               className="input-field"
               min="1"
               step="0.01"
@@ -186,7 +259,7 @@ export default function SubmitPage() {
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
-              placeholder="e.g., Quick Plumb Pro"
+              placeholder="e.g., Quick Plumb Pro, Urban Company"
               className="input-field"
             />
           </div>
@@ -201,7 +274,7 @@ export default function SubmitPage() {
               name="jobDescription"
               value={formData.jobDescription}
               onChange={handleChange}
-              placeholder="e.g., 50-gallon gas water heater, 2-story house, standard install"
+              placeholder="e.g., 1.5 ton split AC, deep cleaning with gas refill"
               className="input-field min-h-[80px] resize-y"
               rows={3}
             />
