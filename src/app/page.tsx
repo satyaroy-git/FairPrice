@@ -39,7 +39,7 @@ export default function HomePage() {
               <SearchBar onSearch={handleSearch} />
             </div>
             <p className="text-blue-200 text-sm mt-4">
-              Try: &quot;water heater replacement&quot; in 90210, or &quot;brake pads&quot; in 60601
+              Try: &quot;water heater installation&quot; in 110001, or &quot;ac service&quot; in 110001, or &quot;brake pads&quot; in 60601
             </p>
           </div>
         </div>

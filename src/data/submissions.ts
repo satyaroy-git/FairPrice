@@ -57,4 +57,50 @@ export const submissions: PriceSubmission[] = [
   { id: '36', serviceType: 'tree removal', categoryId: 'landscaping', zipCode: '97201', pricePaid: 2200, jobDescription: 'Large pine tree near power lines', submittedAt: '2026-04-19', trustPoints: 10 },
   { id: '37', serviceType: 'tree removal', categoryId: 'landscaping', zipCode: '97201', pricePaid: 800, companyName: 'Green Valley Landscaping', jobDescription: 'Small dead tree removal', submittedAt: '2026-03-28', trustPoints: 10 },
   { id: '38', serviceType: 'tree removal', categoryId: 'landscaping', zipCode: '97202', pricePaid: 1800, companyName: 'Portland Tree Service', jobDescription: 'Large maple, stump grinding included', submittedAt: '2026-05-07', trustPoints: 10 },
+
+  // India - Plumbing
+  { id: '39', serviceType: 'water heater installation', categoryId: 'plumbing', zipCode: '110001', pricePaid: 8500, companyName: 'Delhi Plumbing Services', jobDescription: '15L geyser installation, bathroom', submittedAt: '2026-05-20', trustPoints: 10 },
+  { id: '40', serviceType: 'water heater installation', categoryId: 'plumbing', zipCode: '110001', pricePaid: 12000, companyName: 'HomeFix India', jobDescription: '25L geyser, new plumbing lines', submittedAt: '2026-04-15', trustPoints: 10 },
+  { id: '41', serviceType: 'water heater installation', categoryId: 'plumbing', zipCode: '110002', pricePaid: 9500, jobDescription: '15L instant geyser, standard install', submittedAt: '2026-03-22', trustPoints: 10 },
+  { id: '42', serviceType: 'leak fix', categoryId: 'plumbing', zipCode: '110001', pricePaid: 1500, companyName: 'Delhi Plumbing Services', jobDescription: 'Kitchen pipe leak repair', submittedAt: '2026-05-18', trustPoints: 10 },
+  { id: '43', serviceType: 'leak fix', categoryId: 'plumbing', zipCode: '110001', pricePaid: 2500, jobDescription: 'Bathroom concealed pipe leak, wall cutting needed', submittedAt: '2026-04-10', trustPoints: 10 },
+  { id: '44', serviceType: 'leak fix', categoryId: 'plumbing', zipCode: '110003', pricePaid: 1800, companyName: 'UrbanClap Plumber', jobDescription: 'Tap leak and washer replacement', submittedAt: '2026-03-28', trustPoints: 10 },
+
+  // India - Electrical
+  { id: '45', serviceType: 'wiring repair', categoryId: 'electrical', zipCode: '400001', pricePaid: 5000, companyName: 'Mumbai Electricals', jobDescription: '1 room complete rewiring', submittedAt: '2026-05-22', trustPoints: 10 },
+  { id: '46', serviceType: 'wiring repair', categoryId: 'electrical', zipCode: '400001', pricePaid: 15000, jobDescription: '2BHK full house rewiring', submittedAt: '2026-04-18', trustPoints: 10 },
+  { id: '47', serviceType: 'wiring repair', categoryId: 'electrical', zipCode: '400002', pricePaid: 8000, companyName: 'PowerFix Solutions', jobDescription: '1BHK partial rewiring with MCB', submittedAt: '2026-03-12', trustPoints: 10 },
+  { id: '48', serviceType: 'inverter installation', categoryId: 'electrical', zipCode: '110001', pricePaid: 3500, companyName: 'Delhi Electricals', jobDescription: 'Inverter + battery connection setup', submittedAt: '2026-05-14', trustPoints: 10 },
+  { id: '49', serviceType: 'inverter installation', categoryId: 'electrical', zipCode: '110001', pricePaid: 4500, jobDescription: 'Inverter installation with new wiring', submittedAt: '2026-04-20', trustPoints: 10 },
+
+  // India - Auto Repair
+  { id: '50', serviceType: 'car service', categoryId: 'auto-repair', zipCode: '560001', pricePaid: 5500, companyName: 'GoMechanic Bangalore', jobDescription: 'Full car service, Maruti Swift, oil+filter+AC', submittedAt: '2026-05-25', trustPoints: 10 },
+  { id: '51', serviceType: 'car service', categoryId: 'auto-repair', zipCode: '560001', pricePaid: 8000, companyName: 'Authorized Maruti Service', jobDescription: 'Periodic service with brake pad replacement', submittedAt: '2026-04-28', trustPoints: 10 },
+  { id: '52', serviceType: 'car service', categoryId: 'auto-repair', zipCode: '560002', pricePaid: 4500, jobDescription: 'Basic service, Hyundai i20, oil change', submittedAt: '2026-03-15', trustPoints: 10 },
+  { id: '53', serviceType: 'brake pads replacement', categoryId: 'auto-repair', zipCode: '110001', pricePaid: 3500, companyName: 'Delhi Auto Care', jobDescription: 'Front brake pads, Maruti Baleno', submittedAt: '2026-05-10', trustPoints: 10 },
+  { id: '54', serviceType: 'brake pads replacement', categoryId: 'auto-repair', zipCode: '110002', pricePaid: 4200, jobDescription: 'Front and rear brake pads, Honda City', submittedAt: '2026-04-22', trustPoints: 10 },
+
+  // India - HVAC (AC Service)
+  { id: '55', serviceType: 'ac service', categoryId: 'hvac', zipCode: '110001', pricePaid: 1200, companyName: 'Urban Company', jobDescription: 'Split AC deep cleaning, 1.5 ton', submittedAt: '2026-05-21', trustPoints: 10 },
+  { id: '56', serviceType: 'ac service', categoryId: 'hvac', zipCode: '110001', pricePaid: 2500, companyName: 'CoolFix Services', jobDescription: 'AC gas refill + general service', submittedAt: '2026-04-16', trustPoints: 10 },
+  { id: '57', serviceType: 'ac service', categoryId: 'hvac', zipCode: '110002', pricePaid: 800, jobDescription: 'Window AC basic cleaning', submittedAt: '2026-03-20', trustPoints: 10 },
+  { id: '58', serviceType: 'ac installation', categoryId: 'hvac', zipCode: '400001', pricePaid: 3500, companyName: 'Mumbai Cool Tech', jobDescription: 'Split AC installation, 1.5 ton, ground floor', submittedAt: '2026-05-08', trustPoints: 10 },
+  { id: '59', serviceType: 'ac installation', categoryId: 'hvac', zipCode: '400001', pricePaid: 5000, jobDescription: 'Split AC install, 2 ton, 3rd floor with piping', submittedAt: '2026-04-12', trustPoints: 10 },
+
+  // India - Home Exterior (Painting)
+  { id: '60', serviceType: 'house painting', categoryId: 'home-exterior', zipCode: '110001', pricePaid: 45000, companyName: 'Asian Paints Service', jobDescription: '2BHK full interior painting, premium finish', submittedAt: '2026-05-19', trustPoints: 10 },
+  { id: '61', serviceType: 'house painting', categoryId: 'home-exterior', zipCode: '110001', pricePaid: 25000, jobDescription: '1BHK interior painting, standard emulsion', submittedAt: '2026-04-25', trustPoints: 10 },
+  { id: '62', serviceType: 'house painting', categoryId: 'home-exterior', zipCode: '110003', pricePaid: 35000, companyName: 'HomeFix India', jobDescription: '2BHK, walls and ceiling, Berger paint', submittedAt: '2026-03-18', trustPoints: 10 },
+
+  // India - Dental
+  { id: '63', serviceType: 'root canal', categoryId: 'dental', zipCode: '560001', pricePaid: 8000, companyName: 'Clove Dental Bangalore', jobDescription: 'Single root canal, molar, without crown', submittedAt: '2026-05-23', trustPoints: 10 },
+  { id: '64', serviceType: 'root canal', categoryId: 'dental', zipCode: '560001', pricePaid: 15000, jobDescription: 'Root canal with ceramic crown', submittedAt: '2026-04-19', trustPoints: 10 },
+  { id: '65', serviceType: 'root canal', categoryId: 'dental', zipCode: '560002', pricePaid: 6000, companyName: 'Sabka Dentist', jobDescription: 'Front tooth root canal', submittedAt: '2026-03-25', trustPoints: 10 },
+  { id: '66', serviceType: 'dental cleaning', categoryId: 'dental', zipCode: '110001', pricePaid: 1500, companyName: 'Clove Dental Delhi', jobDescription: 'Scaling and polishing', submittedAt: '2026-05-12', trustPoints: 10 },
+  { id: '67', serviceType: 'dental cleaning', categoryId: 'dental', zipCode: '110001', pricePaid: 2000, jobDescription: 'Deep scaling with fluoride treatment', submittedAt: '2026-04-08', trustPoints: 10 },
+
+  // India - Moving (Packers & Movers)
+  { id: '68', serviceType: 'local move', categoryId: 'moving', zipCode: '110001', pricePaid: 8000, companyName: 'Agarwal Packers', jobDescription: '1BHK, within Delhi, 10 km', submittedAt: '2026-05-24', trustPoints: 10 },
+  { id: '69', serviceType: 'local move', categoryId: 'moving', zipCode: '110001', pricePaid: 15000, companyName: 'Porter Movers', jobDescription: '2BHK, within Delhi, 15 km', submittedAt: '2026-04-30', trustPoints: 10 },
+  { id: '70', serviceType: 'local move', categoryId: 'moving', zipCode: '110002', pricePaid: 5000, jobDescription: 'Studio apartment, same area, 3 km', submittedAt: '2026-03-22', trustPoints: 10 },
 ];

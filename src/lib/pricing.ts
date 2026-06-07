@@ -2,7 +2,8 @@ import { PriceSubmission, PriceRange, LookupResult, BreakdownItem, ContractorSco
 import { submissions } from '@/data/submissions';
 
 /**
- * Get nearby ZIP codes (simplified - uses first 3 digits for area matching)
+ * Get nearby ZIP/PIN codes (uses first 3 digits for area matching)
+ * Works for both US ZIP (5 digits) and Indian PIN (6 digits) codes
  */
 function getNearbyZips(zipCode: string): string[] {
   const prefix = zipCode.substring(0, 3);

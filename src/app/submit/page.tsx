@@ -140,18 +140,18 @@ export default function SubmitPage() {
           {/* ZIP Code */}
           <div>
             <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
-              ZIP Code *
+              ZIP/PIN Code *
             </label>
             <input
               type="text"
               id="zipCode"
               name="zipCode"
               value={formData.zipCode}
-              onChange={(e) => setFormData(prev => ({ ...prev, zipCode: e.target.value.replace(/\D/g, '').slice(0, 5) }))}
-              placeholder="e.g., 90210"
+              onChange={(e) => setFormData(prev => ({ ...prev, zipCode: e.target.value.replace(/\D/g, '').slice(0, 6) }))}
+              placeholder="e.g., 90210 or 110001"
               className="input-field"
-              pattern="\d{5}"
-              maxLength={5}
+              pattern="\d{5,6}"
+              maxLength={6}
               required
             />
           </div>

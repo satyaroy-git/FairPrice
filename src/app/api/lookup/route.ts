@@ -14,9 +14,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  if (!/^\d{5}$/.test(zipCode)) {
+  if (!/^\d{5,6}$/.test(zipCode)) {
     return NextResponse.json(
-      { error: 'Invalid ZIP code format. Must be 5 digits.' },
+      { error: 'Invalid ZIP/PIN code format. Must be 5 or 6 digits.' },
       { status: 400 }
     );
   }
