@@ -49,10 +49,15 @@ function LookupContent() {
     router.push(`/lookup?${params.toString()}`);
   };
 
+  const formatPrice = (amount: number) => {
+    if (!result) return `$${amount.toLocaleString()}`;
+    return `${result.currency.symbol}${amount.toLocaleString(result.currency.locale)}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Price Lookup</h1>
-      <p className="text-gray-600 mb-8">Enter a service and ZIP code to see fair prices in your area</p>
+      <p className="text-gray-600 mb-8">Enter a service and ZIP/PIN code to see fair prices in your area</p>
 
       <div className="card mb-8">
         <SearchBar onSearch={handleSearch} initialService={serviceParam} />
@@ -79,6 +84,7 @@ function LookupContent() {
               verdict={result.priceRange.verdict}
               quote={result.priceRange.userQuote}
               average={result.priceRange.average}
+              currency={result.currency}
             />
           )}
 
@@ -91,7 +97,12 @@ function LookupContent() {
                     <h2 className="text-xl font-bold text-gray-900 capitalize">
                       {result.serviceType}
                     </h2>
-                    <p className="text-gray-500">in ZIP {result.zipCode} area</p>
+                    <p className="text-gray-500">
+                      in {result.zipCode.length === 6 ? 'PIN' : 'ZIP'} {result.zipCode} area
+                      <span className="ml-2 text-xs bg-gray-100 px-2 py-0.5 rounded">
+                        {result.currency.country} ({result.currency.code})
+                      </span>
+                    </p>
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-500">
@@ -108,6 +119,7 @@ function LookupContent() {
                   average={result.priceRange.average}
                   high={result.priceRange.high}
                   userQuote={result.priceRange.userQuote}
+                  currency={result.currency}
                 />
               </div>
 
@@ -123,9 +135,9 @@ function LookupContent() {
                           <span className="text-xs text-gray-500 ml-2">({item.count} reports)</span>
                         </div>
                         <div className="text-right">
-                          <span className="text-emerald-600">${item.low.toLocaleString()}</span>
+                          <span className="text-emerald-600">{formatPrice(item.low)}</span>
                           <span className="text-gray-400 mx-1">—</span>
-                          <span className="text-red-600">${item.high.toLocaleString()}</span>
+                          <span className="text-red-600">{formatPrice(item.high)}</span>
                         </div>
                       </div>
                     ))}
@@ -167,7 +179,7 @@ function LookupContent() {
       {!result && !loading && !error && (
         <div className="text-center py-16 text-gray-500">
           <div className="text-5xl mb-4">💰</div>
-          <p className="text-lg">Enter a service and ZIP code above to see price data</p>
+          <p className="text-lg">Enter a service and ZIP/PIN code above to see price data</p>
         </div>
       )}
     </div>

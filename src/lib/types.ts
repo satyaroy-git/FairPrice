@@ -34,9 +34,17 @@ export interface ContractorScore {
   averageDeviation: number; // % above/below area average
 }
 
+export interface CurrencyInfo {
+  code: string;
+  symbol: string;
+  locale: string;
+  country: string;
+}
+
 export interface LookupResult {
   serviceType: string;
   zipCode: string;
+  currency: CurrencyInfo;
   priceRange: PriceRange;
   breakdown: BreakdownItem[];
   contractors: ContractorScore[];

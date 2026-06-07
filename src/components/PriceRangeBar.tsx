@@ -1,18 +1,25 @@
 'use client';
 
+import { CurrencyInfo } from '@/lib/types';
+
 interface PriceRangeBarProps {
   low: number;
   average: number;
   high: number;
   userQuote?: number;
+  currency: CurrencyInfo;
 }
 
-export default function PriceRangeBar({ low, average, high, userQuote }: PriceRangeBarProps) {
+export default function PriceRangeBar({ low, average, high, userQuote, currency }: PriceRangeBarProps) {
   const range = high - low;
   const avgPosition = range > 0 ? ((average - low) / range) * 100 : 50;
   const quotePosition = userQuote && range > 0 
     ? Math.min(100, Math.max(0, ((userQuote - low) / range) * 100))
     : undefined;
+
+  const formatPrice = (amount: number) => {
+    return `${currency.symbol}${amount.toLocaleString(currency.locale)}`;
+  };
 
   return (
     <div className="w-full">
@@ -40,9 +47,9 @@ export default function PriceRangeBar({ low, average, high, userQuote }: PriceRa
         )}
       </div>
       <div className="flex justify-between text-lg font-bold mt-2">
-        <span className="text-emerald-600">${low.toLocaleString()}</span>
-        <span className="text-gray-700">${average.toLocaleString()}</span>
-        <span className="text-red-600">${high.toLocaleString()}</span>
+        <span className="text-emerald-600">{formatPrice(low)}</span>
+        <span className="text-gray-700">{formatPrice(average)}</span>
+        <span className="text-red-600">{formatPrice(high)}</span>
       </div>
     </div>
   );
