@@ -28,7 +28,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
             placeholder="What service? (e.g., water heater replacement)"
             value={service}
             onChange={(e) => setService(e.target.value)}
-            className="input-field"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
             required
           />
         </div>
@@ -38,7 +38,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
             placeholder="ZIP Code"
             value={zip}
             onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
-            className="input-field"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
             pattern="\d{5}"
             maxLength={5}
             required
@@ -51,13 +51,13 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
               placeholder="Your quote ($)"
               value={quote}
               onChange={(e) => setQuote(e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
               min="0"
               step="0.01"
             />
           </div>
         )}
-        <button type="submit" className="btn-primary whitespace-nowrap">
+        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm whitespace-nowrap">
           Check Price
         </button>
       </div>

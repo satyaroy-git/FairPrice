@@ -26,19 +26,19 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white py-20 lg:py-28">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Know What You Should <span className="text-amber-300">Really</span> Pay
             </h1>
-            <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
               Stop guessing if you&apos;re being ripped off. See what real people in your area paid for the same service.
             </p>
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
               <SearchBar onSearch={handleSearch} />
             </div>
-            <p className="text-primary-200 text-sm mt-4">
+            <p className="text-blue-200 text-sm mt-4">
               Try: &quot;water heater replacement&quot; in 90210, or &quot;brake pads&quot; in 60601
             </p>
           </div>
@@ -51,7 +51,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔍</span>
               </div>
               <h3 className="font-semibold text-lg mb-2">1. Search Your Service</h3>
@@ -97,19 +97,19 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-primary-600">38+</div>
+              <div className="text-3xl font-bold text-blue-600">38+</div>
               <div className="text-gray-600 mt-1">Price Reports</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary-600">8</div>
+              <div className="text-3xl font-bold text-blue-600">8</div>
               <div className="text-gray-600 mt-1">Service Categories</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary-600">12+</div>
+              <div className="text-3xl font-bold text-blue-600">12+</div>
               <div className="text-gray-600 mt-1">ZIP Codes Covered</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary-600">95%</div>
+              <div className="text-3xl font-bold text-blue-600">95%</div>
               <div className="text-gray-600 mt-1">Data Freshness</div>
             </div>
           </div>
