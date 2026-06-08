@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newSubmission = addSubmission({
+    const newSubmission = await addSubmission({
       serviceType: serviceType.toLowerCase().trim(),
       categoryId,
       zipCode,
@@ -51,10 +51,11 @@ export async function POST(request: NextRequest) {
       submission: newSubmission,
       message: 'Thank you! You earned 10 trust points for contributing.',
     }, { status: 201 });
-  } catch {
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Something went wrong';
     return NextResponse.json(
-      { error: 'Invalid request body.' },
-      { status: 400 }
+      { error: message },
+      { status: 500 }
     );
   }
 }

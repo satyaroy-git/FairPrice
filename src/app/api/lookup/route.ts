@@ -33,7 +33,14 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = lookupPrice(serviceType, zipCode, userQuote, categoryId, units);
-
-  return NextResponse.json(result);
+  try {
+    const result = await lookupPrice(serviceType, zipCode, userQuote, categoryId, units);
+    return NextResponse.json(result);
+  } catch (err) {
+    console.error('Lookup error:', err);
+    return NextResponse.json(
+      { error: 'Failed to look up prices. Please try again.' },
+      { status: 500 }
+    );
+  }
 }
