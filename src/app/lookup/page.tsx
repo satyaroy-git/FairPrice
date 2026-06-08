@@ -8,6 +8,12 @@ import PriceRangeBar from '@/components/PriceRangeBar';
 import ContractorTable from '@/components/ContractorTable';
 import { LookupResult } from '@/lib/types';
 
+interface UserTier {
+  email: string;
+  trust_points: number;
+  tier: string;
+}
+
 function LookupContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -18,11 +24,24 @@ function LookupContent() {
   const [quoteFormData, setQuoteFormData] = useState({ name: '', phone: '', email: '' });
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
 
+  // User gating state
+  const [userTier, setUserTier] = useState<UserTier | null>(null);
+  const [gateEmail, setGateEmail] = useState('');
+  const [gateLoading, setGateLoading] = useState(false);
+
   const serviceParam = searchParams.get('service') || '';
   const zipParam = searchParams.get('zip') || '';
   const quoteParam = searchParams.get('quote') || '';
   const unitsParam = searchParams.get('units') || '';
   const categoryParam = searchParams.get('category') || '';
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('fairprice_email');
+    if (savedEmail) {
+      fetchUserTier(savedEmail);
+    }
+  }, []);
 
   useEffect(() => {
     if (serviceParam && zipParam) {
@@ -30,6 +49,30 @@ function LookupContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceParam, zipParam, quoteParam, unitsParam]);
+
+  const fetchUserTier = async (email: string) => {
+    try {
+      const res = await fetch(`/api/user?email=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      setUserTier({
+        email: data.email,
+        trust_points: data.trust_points || 0,
+        tier: data.tier || 'new',
+      });
+    } catch {
+      // Silently fail - user just won't see gated content
+    }
+  };
+
+  const handleGateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!gateEmail || !gateEmail.includes('@')) return;
+    setGateLoading(true);
+    const normalizedEmail = gateEmail.toLowerCase().trim();
+    localStorage.setItem('fairprice_email', normalizedEmail);
+    await fetchUserTier(normalizedEmail);
+    setGateLoading(false);
+  };
 
   const fetchResults = async (service: string, zip: string, quote?: number, units?: number) => {
     setLoading(true);
@@ -64,6 +107,42 @@ function LookupContent() {
     return `${result.currency.symbol}${amount.toLocaleString(result.currency.locale)}`;
   };
 
+  // Gating helpers
+  const points = userTier?.trust_points || 0;
+  const canSeeContractors = points >= 10;    // Contributor+
+  const canSeeBreakdown = points >= 50;      // Trusted+
+  const canSeeUnitPricing = points >= 50;    // Trusted+
+
+  // Gate overlay component
+  const GatedSection = ({ requiredPoints, requiredTier, children }: { requiredPoints: number; requiredTier: string; children: React.ReactNode }) => {
+    if (points >= requiredPoints) {
+      return <>{children}</>;
+    }
+
+    return (
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 rounded-xl flex items-center justify-center">
+          <div className="text-center p-6">
+            <div className="text-3xl mb-2">🔒</div>
+            <p className="font-semibold text-gray-800 mb-1">
+              {requiredTier} Feature
+            </p>
+            <p className="text-sm text-gray-600 mb-3">
+              You need {requiredPoints}+ trust points to unlock this.
+              {points > 0 ? ` You have ${points}.` : ''}
+            </p>
+            <a href="/submit" className="inline-block bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700">
+              Submit prices to earn points
+            </a>
+          </div>
+        </div>
+        <div className="opacity-30 pointer-events-none">
+          {children}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Price Lookup</h1>
@@ -88,7 +167,7 @@ function LookupContent() {
 
       {result && !loading && (
         <div className="space-y-6">
-          {/* Verdict Badge */}
+          {/* Verdict Badge - always visible */}
           {result.priceRange.verdict && result.priceRange.userQuote && (
             <VerdictBadge
               verdict={result.priceRange.verdict}
@@ -98,7 +177,7 @@ function LookupContent() {
             />
           )}
 
-          {/* Price Range */}
+          {/* Price Range - always visible */}
           {result.priceRange.submissionCount > 0 ? (
             <>
               <div className="card">
@@ -133,61 +212,100 @@ function LookupContent() {
                 />
               </div>
 
-              {/* Unit Pricing */}
+              {/* Email gate - show if user not identified */}
+              {!userTier && (
+                <div className="card border-amber-200 bg-amber-50">
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-gray-900 mb-1">🔓 Unlock detailed pricing data</p>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Enter your email to see contractor scores, price breakdowns, and per-unit estimates.
+                      <br />Submit prices to earn points and unlock more features!
+                    </p>
+                    <form onSubmit={handleGateSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={gateEmail}
+                        onChange={(e) => setGateEmail(e.target.value)}
+                        className="input-field flex-1"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        disabled={gateLoading}
+                        className="btn-primary whitespace-nowrap disabled:opacity-50"
+                      >
+                        {gateLoading ? 'Loading...' : 'Unlock'}
+                      </button>
+                    </form>
+                    <p className="text-xs text-gray-500 mt-2">No login required. We just track your trust points.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Unit Pricing - Gated to Trusted (50+ pts) */}
               {result.unitPricing && (
-                <div className="card bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    📐 Price Estimate for {result.unitPricing.units} {result.unitPricing.unitLabel}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <p className="text-sm text-gray-500 mb-1">Per {result.unitPricing.unitLabel} rate</p>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-emerald-600 font-semibold">{formatPrice(result.unitPricing.perUnitLow)}</span>
-                        <span className="text-gray-400">—</span>
-                        <span className="text-red-600 font-semibold">{formatPrice(result.unitPricing.perUnitHigh)}</span>
+                <GatedSection requiredPoints={50} requiredTier="Trusted Contributor">
+                  <div className="card bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      📐 Price Estimate for {result.unitPricing.units} {result.unitPricing.unitLabel}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <p className="text-sm text-gray-500 mb-1">Per {result.unitPricing.unitLabel} rate</p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-emerald-600 font-semibold">{formatPrice(result.unitPricing.perUnitLow)}</span>
+                          <span className="text-gray-400">—</span>
+                          <span className="text-red-600 font-semibold">{formatPrice(result.unitPricing.perUnitHigh)}</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">Avg: {formatPrice(result.unitPricing.perUnitAverage)} / {result.unitPricing.unitLabel}</p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">Avg: {formatPrice(result.unitPricing.perUnitAverage)} / {result.unitPricing.unitLabel}</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4 border border-indigo-200">
-                      <p className="text-sm text-gray-500 mb-1">Total estimate ({result.unitPricing.units} {result.unitPricing.unitLabel})</p>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-emerald-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateLow)}</span>
-                        <span className="text-gray-400">—</span>
-                        <span className="text-red-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateHigh)}</span>
+                      <div className="bg-white rounded-lg p-4 border border-indigo-200">
+                        <p className="text-sm text-gray-500 mb-1">Total estimate ({result.unitPricing.units} {result.unitPricing.unitLabel})</p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-emerald-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateLow)}</span>
+                          <span className="text-gray-400">—</span>
+                          <span className="text-red-600 text-lg font-bold">{formatPrice(result.unitPricing.totalEstimateHigh)}</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">Avg total: {formatPrice(result.unitPricing.totalEstimateAverage)}</p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">Avg total: {formatPrice(result.unitPricing.totalEstimateAverage)}</p>
                     </div>
                   </div>
-                </div>
+                </GatedSection>
               )}
 
-              {/* Breakdown */}
+              {/* Breakdown - Gated to Trusted (50+ pts) */}
               {result.breakdown.length > 0 && (
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">📋 Price Breakdown</h3>
-                  <div className="space-y-3">
-                    {result.breakdown.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                        <div>
-                          <span className="font-medium text-gray-900">{item.label}</span>
-                          <span className="text-xs text-gray-500 ml-2">({item.count} reports)</span>
+                <GatedSection requiredPoints={50} requiredTier="Trusted Contributor">
+                  <div className="card">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📋 Price Breakdown</h3>
+                    <div className="space-y-3">
+                      {result.breakdown.map((item, index) => (
+                        <div key={index} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                          <div>
+                            <span className="font-medium text-gray-900">{item.label}</span>
+                            <span className="text-xs text-gray-500 ml-2">({item.count} reports)</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-emerald-600">{formatPrice(item.low)}</span>
+                            <span className="text-gray-400 mx-1">—</span>
+                            <span className="text-red-600">{formatPrice(item.high)}</span>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <span className="text-emerald-600">{formatPrice(item.low)}</span>
-                          <span className="text-gray-400 mx-1">—</span>
-                          <span className="text-red-600">{formatPrice(item.high)}</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </GatedSection>
               )}
 
-              {/* Contractors */}
-              <ContractorTable contractors={result.contractors} />
+              {/* Contractors - Gated to Contributor (10+ pts) */}
+              {result.contractors.length > 0 && (
+                <GatedSection requiredPoints={10} requiredTier="Contributor">
+                  <ContractorTable contractors={result.contractors} />
+                </GatedSection>
+              )}
 
-              {/* Get 3 Quotes CTA */}
+              {/* Get 3 Quotes CTA - Always visible */}
               <div className="card bg-gradient-to-r from-blue-50 to-blue-50 border-blue-200">
                 {!showQuoteForm && !quoteSubmitted && (
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
