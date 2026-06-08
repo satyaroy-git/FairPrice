@@ -226,9 +226,9 @@ export default function SubmitPage() {
 
           {/* Unit/Area/Quantity - shows when subcategory has unitConfig */}
           {unitConfig && (
-            <div>
-              <label htmlFor="units" className="block text-sm font-medium text-gray-700 mb-1">
-                {unitConfig.label} *
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <label htmlFor="units" className="block text-sm font-medium text-blue-800 mb-2">
+                📐 {unitConfig.label} *
               </label>
               {unitConfig.options ? (
                 <select
@@ -260,7 +260,7 @@ export default function SubmitPage() {
                   required
                 />
               )}
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-blue-600 mt-2">
                 This helps calculate accurate per-{unitConfig.unit} pricing for others
               </p>
             </div>
