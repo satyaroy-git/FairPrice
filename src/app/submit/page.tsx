@@ -184,11 +184,18 @@ export default function SubmitPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Submit a Price</h1>
-      <p className="text-gray-600 mb-8">
-        Help others get fair prices by sharing what you paid. All submissions are anonymous.
-      </p>
+    <div>
+      {/* Header matching homepage gradient */}
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-12">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold mb-2">Submit a Price</h1>
+          <p className="text-blue-100">
+            Help others get fair prices by sharing what you paid. All submissions are anonymous.
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
       {/* Email Entry / User Info Section */}
       {!emailVerified ? (
@@ -544,6 +551,7 @@ export default function SubmitPage() {
             <span className="text-xs text-gray-500">+ Flag data & moderate</span>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

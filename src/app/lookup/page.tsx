@@ -171,21 +171,27 @@ function LookupContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Price Lookup</h1>
-      <p className="text-gray-600 mb-8">Enter a service and ZIP/PIN code to see fair prices in your area</p>
+    <div>
+      {/* Header matching homepage gradient */}
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold mb-2">Price Lookup</h1>
+          <p className="text-blue-100 mb-6">Enter a service and ZIP/PIN code to see fair prices in your area</p>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <SearchBar
+              onSearch={handleSearch}
+              initialService={serviceParam}
+              initialZip={zipParam}
+              initialUnits={unitsParam}
+              lockedCategory={categoryParam || undefined}
+              initialCategory={categoryParam}
+              initialSubcategory={subcategoryParam}
+            />
+          </div>
+        </div>
+      </section>
 
-      <div className="card mb-8">
-        <SearchBar
-          onSearch={handleSearch}
-          initialService={serviceParam}
-          initialZip={zipParam}
-          initialUnits={unitsParam}
-          lockedCategory={categoryParam || undefined}
-          initialCategory={categoryParam}
-          initialSubcategory={subcategoryParam}
-        />
-      </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
       {/* Search limit reached */}
       {searchLimitReached && (
@@ -477,6 +483,7 @@ function LookupContent() {
           <p className="text-lg">Enter a service and ZIP/PIN code above to see price data</p>
         </div>
       )}
+      </div>
     </div>
   );
 }
