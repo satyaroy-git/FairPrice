@@ -13,20 +13,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#2563eb" />
+      </head>
       <body className="min-h-screen">
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <a href="/" className="flex items-center space-x-2">
-                <span className="text-2xl">💰</span>
-                <span className="text-xl font-bold text-blue-700">FairPrice</span>
+            <div className="flex justify-between items-center h-14 sm:h-16">
+              <a href="/" className="flex items-center space-x-1.5 sm:space-x-2">
+                <span className="text-xl sm:text-2xl">💰</span>
+                <span className="text-lg sm:text-xl font-bold text-blue-700">FairPrice</span>
               </a>
-              <div className="flex items-center space-x-6">
-                <a href="/lookup" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-                  Look Up Price
+              <div className="flex items-center space-x-3 sm:space-x-6">
+                <a href="/lookup" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                  Lookup
                 </a>
-                <a href="/submit" className="btn-primary text-sm !py-2 !px-4">
-                  Submit a Price
+                <a href="/submit" className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-lg transition-colors">
+                  Submit
                 </a>
               </div>
             </div>
