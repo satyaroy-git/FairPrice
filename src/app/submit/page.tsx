@@ -3,7 +3,27 @@
 import { useState, useEffect } from 'react';
 import { categories, SubCategory, UnitConfig } from '@/data/categories';
 
+interface UserInfo {
+  email: string;
+  trust_points: number;
+  submissions_count: number;
+  tier: string;
+}
+
+const tierLabels: Record<string, { label: string; color: string; icon: string }> = {
+  new: { label: 'New Member', color: 'text-gray-600 bg-gray-100', icon: '🌱' },
+  contributor: { label: 'Contributor', color: 'text-blue-700 bg-blue-50', icon: '⭐' },
+  trusted: { label: 'Trusted Contributor', color: 'text-emerald-700 bg-emerald-50', icon: '🏅' },
+  power: { label: 'Power Contributor', color: 'text-purple-700 bg-purple-50', icon: '💎' },
+  moderator: { label: 'Community Moderator', color: 'text-amber-700 bg-amber-50', icon: '👑' },
+};
+
 export default function SubmitPage() {
+  const [email, setEmail] = useState('');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(false);
+
   const [formData, setFormData] = useState({
     serviceType: '',
     categoryId: '',
@@ -20,7 +40,15 @@ export default function SubmitPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [trustPoints, setTrustPoints] = useState(0);
+
+  // Load saved email from localStorage
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('fairprice_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      lookupUser(savedEmail);
+    }
+  }, []);
 
   useEffect(() => {
     if (formData.categoryId) {
@@ -49,6 +77,33 @@ export default function SubmitPage() {
     }
   }, [formData.subcategoryId, formData.categoryId]);
 
+  const lookupUser = async (userEmail: string) => {
+    setLoadingUser(true);
+    try {
+      const res = await fetch(`/api/user?email=${encodeURIComponent(userEmail)}`);
+      const data = await res.json();
+      setUserInfo({
+        email: data.email,
+        trust_points: data.trust_points || 0,
+        submissions_count: data.submissions_count || 0,
+        tier: data.tier || 'new',
+      });
+      setEmailVerified(true);
+      localStorage.setItem('fairprice_email', userEmail.toLowerCase().trim());
+    } catch {
+      setEmailVerified(false);
+    } finally {
+      setLoadingUser(false);
+    }
+  };
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email && email.includes('@')) {
+      lookupUser(email.toLowerCase().trim());
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -72,6 +127,7 @@ export default function SubmitPage() {
           unitType: unitConfig?.unit || undefined,
           companyName: formData.companyName || undefined,
           jobDescription: formData.jobDescription || undefined,
+          email: email.toLowerCase().trim(),
         }),
       });
 
@@ -79,7 +135,15 @@ export default function SubmitPage() {
       if (!response.ok) throw new Error(data.error);
 
       setSuccess(true);
-      setTrustPoints(prev => prev + 10);
+      // Update local user info with new points
+      if (data.user) {
+        setUserInfo({
+          email: data.user.email,
+          trust_points: data.user.trust_points,
+          submissions_count: (userInfo?.submissions_count || 0) + 1,
+          tier: data.user.tier,
+        });
+      }
       setFormData({
         serviceType: '',
         categoryId: '',
@@ -97,10 +161,27 @@ export default function SubmitPage() {
     }
   };
 
+  const handleChangeEmail = () => {
+    setEmailVerified(false);
+    setUserInfo(null);
+    localStorage.removeItem('fairprice_email');
+  };
+
   // Calculate per-unit price for display
   const perUnitPrice = formData.pricePaid && formData.units
     ? (parseFloat(formData.pricePaid) / parseFloat(formData.units)).toFixed(0)
     : null;
+
+  // Next tier info
+  const getNextTierInfo = () => {
+    if (!userInfo) return null;
+    const points = userInfo.trust_points;
+    if (points < 10) return { next: 'Contributor', needed: 10 - points, icon: '⭐' };
+    if (points < 50) return { next: 'Trusted Contributor', needed: 50 - points, icon: '🏅' };
+    if (points < 100) return { next: 'Power Contributor', needed: 100 - points, icon: '💎' };
+    if (points < 200) return { next: 'Community Moderator', needed: 200 - points, icon: '👑' };
+    return null;
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -109,22 +190,84 @@ export default function SubmitPage() {
         Help others get fair prices by sharing what you paid. All submissions are anonymous.
       </p>
 
-      {trustPoints > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-center gap-3">
-          <span className="text-2xl">⭐</span>
-          <div>
-            <span className="font-semibold text-amber-800">Trust Points: {trustPoints}</span>
-            <p className="text-amber-700 text-sm">Thank you for contributing to the community!</p>
+      {/* Email Entry / User Info Section */}
+      {!emailVerified ? (
+        <div className="card mb-8 border-blue-200 bg-blue-50">
+          <h3 className="font-semibold text-gray-900 mb-2">📧 Enter your email to get started</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            We use your email to track your trust points. No spam, no login required.
+          </p>
+          <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-field flex-1"
+              required
+            />
+            <button
+              type="submit"
+              disabled={loadingUser}
+              className="btn-primary whitespace-nowrap disabled:opacity-50"
+            >
+              {loadingUser ? 'Loading...' : 'Continue'}
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="card mb-8 border-emerald-200 bg-gradient-to-r from-emerald-50 to-blue-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{tierLabels[userInfo?.tier || 'new']?.icon}</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-900">{email}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${tierLabels[userInfo?.tier || 'new']?.color}`}>
+                    {tierLabels[userInfo?.tier || 'new']?.label}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600 mt-0.5">
+                  <span className="font-medium text-amber-700">{userInfo?.trust_points || 0} trust points</span>
+                  <span className="mx-2">•</span>
+                  <span>{userInfo?.submissions_count || 0} submissions</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleChangeEmail}
+              className="text-xs text-gray-500 hover:text-gray-700 underline"
+            >
+              Change
+            </button>
           </div>
+          {/* Progress to next tier */}
+          {getNextTierInfo() && (
+            <div className="mt-3 pt-3 border-t border-emerald-100">
+              <div className="flex items-center justify-between text-xs text-gray-600">
+                <span>{getNextTierInfo()?.icon} Next: {getNextTierInfo()?.next}</span>
+                <span>{getNextTierInfo()?.needed} more points needed ({Math.ceil((getNextTierInfo()?.needed || 0) / 10)} more submissions)</span>
+              </div>
+              <div className="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-emerald-500 rounded-full transition-all"
+                  style={{
+                    width: `${Math.min(100, ((userInfo?.trust_points || 0) / ((userInfo?.trust_points || 0) + (getNextTierInfo()?.needed || 1))) * 100)}%`
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
+      {/* Success Message */}
       {success && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6 mb-6 text-center">
           <div className="text-4xl mb-2">🎉</div>
           <h3 className="text-lg font-semibold text-emerald-800">Submitted Successfully!</h3>
           <p className="text-emerald-700 text-sm mt-1">
-            You earned 10 trust points. Your data helps the community get fair prices.
+            You earned 10 trust points! Total: <span className="font-bold">{userInfo?.trust_points}</span> points ({tierLabels[userInfo?.tier || 'new']?.label})
           </p>
           <button
             onClick={() => setSuccess(false)}
@@ -135,7 +278,8 @@ export default function SubmitPage() {
         </div>
       )}
 
-      {!success && (
+      {/* Submission Form - Only shows after email is verified */}
+      {emailVerified && !success && (
         <form onSubmit={handleSubmit} className="card space-y-6">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
@@ -360,27 +504,46 @@ export default function SubmitPage() {
         </form>
       )}
 
-      {/* Info Section */}
+      {/* Tier Benefits Info */}
       <div className="mt-8 card bg-gray-50 border-gray-200">
-        <h3 className="font-semibold text-gray-900 mb-3">Why Submit?</h3>
-        <ul className="space-y-2 text-sm text-gray-600">
-          <li className="flex items-start gap-2">
-            <span className="text-emerald-500 mt-0.5">✓</span>
-            <span>Help others avoid getting overcharged</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-emerald-500 mt-0.5">✓</span>
-            <span>All submissions are completely anonymous</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-emerald-500 mt-0.5">✓</span>
-            <span>Earn trust points for contributing to the community</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-emerald-500 mt-0.5">✓</span>
-            <span>More data = more accurate prices for everyone</span>
-          </li>
-        </ul>
+        <h3 className="font-semibold text-gray-900 mb-3">🏆 Trust Points & Tiers</h3>
+        <div className="space-y-3 text-sm">
+          <div className="flex items-center gap-3 p-2 rounded bg-white border border-gray-100">
+            <span>🌱</span>
+            <div className="flex-1">
+              <span className="font-medium">New Member</span> — 0 pts
+            </div>
+            <span className="text-xs text-gray-500">Basic price lookups</span>
+          </div>
+          <div className="flex items-center gap-3 p-2 rounded bg-white border border-gray-100">
+            <span>⭐</span>
+            <div className="flex-1">
+              <span className="font-medium">Contributor</span> — 10+ pts
+            </div>
+            <span className="text-xs text-gray-500">+ Contractor names</span>
+          </div>
+          <div className="flex items-center gap-3 p-2 rounded bg-white border border-gray-100">
+            <span>🏅</span>
+            <div className="flex-1">
+              <span className="font-medium">Trusted</span> — 50+ pts
+            </div>
+            <span className="text-xs text-gray-500">+ Full breakdown & per-unit data</span>
+          </div>
+          <div className="flex items-center gap-3 p-2 rounded bg-white border border-gray-100">
+            <span>💎</span>
+            <div className="flex-1">
+              <span className="font-medium">Power</span> — 100+ pts
+            </div>
+            <span className="text-xs text-gray-500">+ Price alerts & history</span>
+          </div>
+          <div className="flex items-center gap-3 p-2 rounded bg-white border border-gray-100">
+            <span>👑</span>
+            <div className="flex-1">
+              <span className="font-medium">Moderator</span> — 200+ pts
+            </div>
+            <span className="text-xs text-gray-500">+ Flag data & moderate</span>
+          </div>
+        </div>
       </div>
     </div>
   );

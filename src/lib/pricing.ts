@@ -271,6 +271,7 @@ export async function addSubmission(submission: {
   unitType?: string;
   companyName?: string;
   jobDescription?: string;
+  userEmail?: string;
 }) {
   const { data, error } = await supabase
     .from('submissions')
@@ -283,6 +284,7 @@ export async function addSubmission(submission: {
       unit_type: submission.unitType || null,
       company_name: submission.companyName || null,
       job_description: submission.jobDescription || null,
+      user_email: submission.userEmail || null,
     })
     .select()
     .single();
