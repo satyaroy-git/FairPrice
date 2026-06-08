@@ -23,6 +23,8 @@ function LookupContent() {
   const [showQuoteForm, setShowQuoteForm] = useState(false);
   const [quoteFormData, setQuoteFormData] = useState({ name: '', phone: '', email: '' });
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
+  const [quoteSubmitting, setQuoteSubmitting] = useState(false);
+  const [quoteEmailSent, setQuoteEmailSent] = useState(false);
 
   // User gating state
   const [userTier, setUserTier] = useState<UserTier | null>(null);
@@ -387,10 +389,36 @@ function LookupContent() {
                       Enter your details and we&apos;ll connect you with 2-3 vetted local professionals for <span className="font-semibold capitalize">{result.serviceType}</span> near {result.zipCode}.
                     </p>
                     <form
-                      onSubmit={(e) => {
+                      onSubmit={async (e) => {
                         e.preventDefault();
+                        setQuoteSubmitting(true);
+                        try {
+                          const res = await fetch('/api/leads', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              name: quoteFormData.name,
+                              phone: quoteFormData.phone,
+                              email: quoteFormData.email,
+                              serviceType: result.serviceType,
+                              categoryId: categoryParam || null,
+                              zipCode: result.zipCode,
+                              units: result.unitPricing?.units || null,
+                              unitType: result.unitPricing?.unitLabel || null,
+                              priceRangeLow: result.priceRange.low,
+                              priceRangeHigh: result.priceRange.high,
+                              priceRangeAvg: result.priceRange.average,
+                              contractors: result.contractors.slice(0, 3).map(c => c.companyName),
+                            }),
+                          });
+                          const data = await res.json();
+                          if (data.emailSent) setQuoteEmailSent(true);
+                        } catch {
+                          // Still show success even if API fails - lead may be stored
+                        }
                         setQuoteSubmitted(true);
                         setShowQuoteForm(false);
+                        setQuoteSubmitting(false);
                       }}
                       className="space-y-3"
                     >
@@ -421,8 +449,8 @@ function LookupContent() {
                         />
                       </div>
                       <div className="flex gap-3">
-                        <button type="submit" className="btn-primary text-sm !py-2.5">
-                          Send Me Quotes
+                        <button type="submit" disabled={quoteSubmitting} className="btn-primary text-sm !py-2.5 disabled:opacity-50">
+                          {quoteSubmitting ? 'Sending...' : 'Send Me Quotes'}
                         </button>
                         <button
                           type="button"
@@ -432,7 +460,7 @@ function LookupContent() {
                           Cancel
                         </button>
                       </div>
-                      <p className="text-xs text-gray-400">No spam. Professionals will contact you within 24 hours.</p>
+                      <p className="text-xs text-gray-400">No spam. We&apos;ll email you the quote details + connect you with professionals.</p>
                     </form>
                   </div>
                 )}
@@ -441,9 +469,16 @@ function LookupContent() {
                   <div className="text-center py-4">
                     <div className="text-3xl mb-2">✅</div>
                     <h3 className="text-lg font-semibold text-emerald-700">Request Submitted!</h3>
-                    <p className="text-gray-600 text-sm mt-1">
-                      2-3 vetted professionals for <span className="font-semibold capitalize">{result.serviceType}</span> near {result.zipCode} will contact you within 24 hours with their best quotes.
-                    </p>
+                    {quoteEmailSent ? (
+                      <p className="text-gray-600 text-sm mt-1">
+                        📧 We&apos;ve sent the quote details to <span className="font-semibold">{quoteFormData.email}</span>. Check your inbox!
+                        <br />2-3 vetted professionals will also contact you within 24 hours.
+                      </p>
+                    ) : (
+                      <p className="text-gray-600 text-sm mt-1">
+                        2-3 vetted professionals for <span className="font-semibold capitalize">{result.serviceType}</span> near {result.zipCode} will contact you within 24 hours with their best quotes.
+                      </p>
+                    )}
                     {result.contractors.length > 0 && (
                       <div className="mt-4 text-left bg-white rounded-lg p-4 border border-gray-200">
                         <p className="text-sm font-medium text-gray-700 mb-2">Top-rated contractors in your area:</p>
