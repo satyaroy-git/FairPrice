@@ -183,9 +183,27 @@ export async function lookupPrice(
       }
     }
 
-    const perUnitLow = Math.round(priceRange.low / 1);
-    const perUnitAverage = Math.round(priceRange.average / 1);
-    const perUnitHigh = Math.round(priceRange.high / 1);
+    // Calculate per-unit rates from submissions that have unit data
+    const submissionsWithUnits = submissions.filter(s => s.units && Number(s.units) > 0);
+
+    let perUnitLow: number;
+    let perUnitAverage: number;
+    let perUnitHigh: number;
+
+    if (submissionsWithUnits.length > 0) {
+      // Use actual per-unit data from submissions
+      const perUnitPrices = submissionsWithUnits
+        .map(s => Number(s.price_paid) / Number(s.units))
+        .sort((a, b) => a - b);
+      perUnitLow = Math.round(perUnitPrices[0]);
+      perUnitHigh = Math.round(perUnitPrices[perUnitPrices.length - 1]);
+      perUnitAverage = Math.round(perUnitPrices.reduce((a, b) => a + b, 0) / perUnitPrices.length);
+    } else {
+      // Fallback: use overall price range as per-unit (assumes 1 unit per submission)
+      perUnitLow = priceRange.low;
+      perUnitAverage = priceRange.average;
+      perUnitHigh = priceRange.high;
+    }
 
     unitPricing = {
       units,
@@ -247,6 +265,8 @@ export async function addSubmission(submission: {
   categoryId: string;
   zipCode: string;
   pricePaid: number;
+  units?: number;
+  unitType?: string;
   companyName?: string;
   jobDescription?: string;
 }) {
@@ -257,6 +277,8 @@ export async function addSubmission(submission: {
       category_id: submission.categoryId,
       zip_code: submission.zipCode,
       price_paid: submission.pricePaid,
+      units: submission.units || null,
+      unit_type: submission.unitType || null,
       company_name: submission.companyName || null,
       job_description: submission.jobDescription || null,
     })
@@ -273,6 +295,8 @@ export async function addSubmission(submission: {
     categoryId: data.category_id,
     zipCode: data.zip_code,
     pricePaid: Number(data.price_paid),
+    units: data.units ? Number(data.units) : undefined,
+    unitType: data.unit_type || undefined,
     companyName: data.company_name || undefined,
     jobDescription: data.job_description || undefined,
     submittedAt: data.submitted_at,

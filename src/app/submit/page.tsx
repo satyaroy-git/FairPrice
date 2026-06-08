@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { categories, SubCategory } from '@/data/categories';
+import { categories, SubCategory, UnitConfig } from '@/data/categories';
 
 export default function SubmitPage() {
   const [formData, setFormData] = useState({
@@ -10,11 +10,13 @@ export default function SubmitPage() {
     subcategoryId: '',
     zipCode: '',
     pricePaid: '',
+    units: '',
     companyName: '',
     jobDescription: '',
   });
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [serviceTypes, setServiceTypes] = useState<string[]>([]);
+  const [unitConfig, setUnitConfig] = useState<UnitConfig | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -24,11 +26,13 @@ export default function SubmitPage() {
     if (formData.categoryId) {
       const cat = categories.find(c => c.id === formData.categoryId);
       setSubcategories(cat?.subcategories || []);
-      setFormData(prev => ({ ...prev, subcategoryId: '', serviceType: '' }));
+      setFormData(prev => ({ ...prev, subcategoryId: '', serviceType: '', units: '' }));
       setServiceTypes([]);
+      setUnitConfig(null);
     } else {
       setSubcategories([]);
       setServiceTypes([]);
+      setUnitConfig(null);
     }
   }, [formData.categoryId]);
 
@@ -37,8 +41,11 @@ export default function SubmitPage() {
       const cat = categories.find(c => c.id === formData.categoryId);
       const sub = cat?.subcategories.find(s => s.id === formData.subcategoryId);
       setServiceTypes(sub?.serviceTypes || []);
+      setUnitConfig(sub?.unitConfig || null);
+      setFormData(prev => ({ ...prev, units: '' }));
     } else {
       setServiceTypes([]);
+      setUnitConfig(null);
     }
   }, [formData.subcategoryId, formData.categoryId]);
 
@@ -61,6 +68,8 @@ export default function SubmitPage() {
           categoryId: formData.categoryId,
           zipCode: formData.zipCode,
           pricePaid: parseFloat(formData.pricePaid),
+          units: formData.units ? parseFloat(formData.units) : undefined,
+          unitType: unitConfig?.unit || undefined,
           companyName: formData.companyName || undefined,
           jobDescription: formData.jobDescription || undefined,
         }),
@@ -77,6 +86,7 @@ export default function SubmitPage() {
         subcategoryId: '',
         zipCode: '',
         pricePaid: '',
+        units: '',
         companyName: '',
         jobDescription: '',
       });
@@ -86,6 +96,11 @@ export default function SubmitPage() {
       setSubmitting(false);
     }
   };
+
+  // Calculate per-unit price for display
+  const perUnitPrice = formData.pricePaid && formData.units
+    ? (parseFloat(formData.pricePaid) / parseFloat(formData.units)).toFixed(0)
+    : null;
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -209,6 +224,48 @@ export default function SubmitPage() {
             )}
           </div>
 
+          {/* Unit/Area/Quantity - shows when subcategory has unitConfig */}
+          {unitConfig && (
+            <div>
+              <label htmlFor="units" className="block text-sm font-medium text-gray-700 mb-1">
+                {unitConfig.label} *
+              </label>
+              {unitConfig.options ? (
+                <select
+                  id="units"
+                  name="units"
+                  value={formData.units}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                >
+                  <option value="">Select {unitConfig.label.toLowerCase()}</option>
+                  {unitConfig.options.map(opt => (
+                    <option key={opt} value={opt}>
+                      {opt} {unitConfig.unit}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="number"
+                  id="units"
+                  name="units"
+                  value={formData.units}
+                  onChange={handleChange}
+                  placeholder={unitConfig.placeholder}
+                  className="input-field"
+                  min="1"
+                  step="any"
+                  required
+                />
+              )}
+              <p className="text-xs text-gray-400 mt-1">
+                This helps calculate accurate per-{unitConfig.unit} pricing for others
+              </p>
+            </div>
+          )}
+
           {/* ZIP Code */}
           <div>
             <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
@@ -231,7 +288,7 @@ export default function SubmitPage() {
           {/* Price Paid */}
           <div>
             <label htmlFor="pricePaid" className="block text-sm font-medium text-gray-700 mb-1">
-              What You Paid *
+              Total Amount Paid *
               <span className="text-gray-400 ml-1">(in local currency)</span>
             </label>
             <input
@@ -246,6 +303,12 @@ export default function SubmitPage() {
               step="0.01"
               required
             />
+            {/* Per-unit calculation display */}
+            {perUnitPrice && unitConfig && (
+              <p className="text-sm text-blue-600 mt-1 font-medium">
+                = {formData.zipCode.length === 6 ? '₹' : '$'}{parseInt(perUnitPrice).toLocaleString()} per {unitConfig.unit}
+              </p>
+            )}
           </div>
 
           {/* Company Name (Optional) */}

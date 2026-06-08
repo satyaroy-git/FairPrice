@@ -5,7 +5,7 @@ import { categories } from '@/data/categories';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { serviceType, categoryId, zipCode, pricePaid, companyName, jobDescription } = body;
+    const { serviceType, categoryId, zipCode, pricePaid, units, unitType, companyName, jobDescription } = body;
 
     // Validation
     if (!serviceType || !categoryId || !zipCode || !pricePaid) {
@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
       categoryId,
       zipCode,
       pricePaid,
+      units: units || undefined,
+      unitType: unitType || undefined,
       companyName: companyName || undefined,
       jobDescription: jobDescription || undefined,
     });
