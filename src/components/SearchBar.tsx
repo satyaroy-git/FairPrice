@@ -106,12 +106,12 @@ export default function SearchBar({
     <form onSubmit={handleSubmit} className="w-full">
       <div className="flex flex-col gap-3">
         {/* Row 1: Category and Subcategory dropdowns */}
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <select
               value={selectedCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100 text-base"
               disabled={!!lockedCategory}
             >
               <option value="">Select Category</option>
@@ -134,7 +134,7 @@ export default function SearchBar({
             <select
               value={selectedSubcategory}
               onChange={(e) => handleSubcategoryChange(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100 disabled:text-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100 disabled:text-gray-400 text-base"
               disabled={!selectedCategory}
             >
               <option value="">Select Subcategory</option>
@@ -148,13 +148,13 @@ export default function SearchBar({
         </div>
 
         {/* Row 2: Service type + Unit/Area (if applicable) */}
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             {serviceTypes.length > 0 ? (
               <select
                 value={service}
                 onChange={(e) => setService(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white text-base"
                 required
               >
                 <option value="">Select Service Type</option>
@@ -176,7 +176,7 @@ export default function SearchBar({
             )}
           </div>
           {unitConfig && (
-            <div className="w-full md:w-44">
+            <div className="w-full sm:w-44">
               {unitConfig.options ? (
                 <select
                   value={units}
@@ -206,33 +206,33 @@ export default function SearchBar({
         </div>
 
         {/* Row 3: ZIP, Quote, Button */}
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="w-full md:w-36">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="w-full sm:w-36">
             <input
               type="text"
               placeholder="PIN/ZIP Code"
               value={zip}
               onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 6))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400 text-base"
               pattern="\d{5,6}"
               maxLength={6}
               required
             />
           </div>
           {showQuoteField && (
-            <div className="w-full md:w-40">
+            <div className="w-full sm:w-40">
               <input
                 type="number"
                 placeholder="Your quote (amount)"
                 value={quote}
                 onChange={(e) => setQuote(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400 text-base"
                 min="0"
                 step="0.01"
               />
             </div>
           )}
-          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm whitespace-nowrap">
+          <button type="submit" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm whitespace-nowrap text-base">
             Check Price
           </button>
         </div>
