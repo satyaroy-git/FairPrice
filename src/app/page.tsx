@@ -10,10 +10,12 @@ export default function HomePage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
 
-  const handleSearch = (service: string, zip: string, quote?: number, units?: number) => {
+  const handleSearch = (service: string, zip: string, quote?: number, units?: number, category?: string, subcategory?: string) => {
     const params = new URLSearchParams({ service, zip });
     if (quote) params.set('quote', String(quote));
     if (units) params.set('units', String(units));
+    if (category) params.set('category', category);
+    if (subcategory) params.set('subcategory', subcategory);
     router.push(`/lookup?${params.toString()}`);
   };
 
