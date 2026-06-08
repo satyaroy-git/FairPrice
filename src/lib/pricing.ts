@@ -9,6 +9,8 @@ interface DbSubmission {
   category_id: string;
   zip_code: string;
   price_paid: number;
+  units: number | null;
+  unit_type: string | null;
   company_name: string | null;
   job_description: string | null;
   submitted_at: string;
