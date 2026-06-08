@@ -218,6 +218,25 @@ export async function lookupPrice(
       totalEstimateAverage: Math.round(perUnitAverage * units),
       totalEstimateHigh: Math.round(perUnitHigh * units),
     };
+
+    // Override main price range with unit-adjusted values
+    // so the price bar shows the correct price for the requested size
+    priceRange.low = Math.round(perUnitLow * units);
+    priceRange.average = Math.round(perUnitAverage * units);
+    priceRange.high = Math.round(perUnitHigh * units);
+
+    // Re-evaluate verdict against adjusted average
+    if (userQuote !== undefined) {
+      const adjThreshold10 = priceRange.average * 1.1;
+      const adjThreshold25 = priceRange.average * 1.25;
+      if (userQuote <= adjThreshold10) {
+        priceRange.verdict = 'FAIR';
+      } else if (userQuote <= adjThreshold25) {
+        priceRange.verdict = 'A_BIT_HIGH';
+      } else {
+        priceRange.verdict = 'OVERPRICED';
+      }
+    }
   }
 
   return {
