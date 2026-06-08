@@ -134,13 +134,15 @@ function LookupContent() {
 
   // Gating helpers
   const points = userTier?.trust_points || 0;
-  const canSeeContractors = points >= 10;    // Contributor+
-  const canSeeBreakdown = points >= 50;      // Trusted+
-  const canSeeUnitPricing = points >= 50;    // Trusted+
+  const isFreeSearch = searchCount <= 3; // First 3 searches are completely free with full access
+  const canSeeContractors = isFreeSearch || points >= 10;
+  const canSeeBreakdown = isFreeSearch || points >= 50;
+  const canSeeUnitPricing = isFreeSearch || points >= 50;
 
   // Gate overlay component
   const GatedSection = ({ requiredPoints, requiredTier, children }: { requiredPoints: number; requiredTier: string; children: React.ReactNode }) => {
-    if (points >= requiredPoints) {
+    // Always show for first 3 free searches
+    if (isFreeSearch || points >= requiredPoints) {
       return <>{children}</>;
     }
 
@@ -262,8 +264,8 @@ function LookupContent() {
                 />
               </div>
 
-              {/* Email gate - show if user not identified */}
-              {!userTier && (
+              {/* Email gate - show if user not identified AND past free searches */}
+              {!userTier && !isFreeSearch && (
                 <div className="card border-amber-200 bg-amber-50">
                   <div className="text-center">
                     <p className="text-lg font-semibold text-gray-900 mb-1">🔓 Unlock detailed pricing data</p>
