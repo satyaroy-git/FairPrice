@@ -5,7 +5,10 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get('q') || '';
 
-  const results = searchServices(query);
-
-  return NextResponse.json({ services: results });
+  try {
+    const results = await searchServices(query);
+    return NextResponse.json({ services: results });
+  } catch {
+    return NextResponse.json({ services: [] });
+  }
 }
