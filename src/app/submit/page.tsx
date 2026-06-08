@@ -44,8 +44,18 @@ export default function SubmitPage() {
   // Load saved email from localStorage
   useEffect(() => {
     const savedEmail = localStorage.getItem('fairprice_email');
+    // First restore cached user info immediately (no flash of 0 points)
+    const cachedInfo = localStorage.getItem('fairprice_user_info');
+    if (cachedInfo) {
+      try {
+        const parsed = JSON.parse(cachedInfo);
+        setUserInfo(parsed);
+        setEmailVerified(true);
+      } catch { /* ignore */ }
+    }
     if (savedEmail) {
       setEmail(savedEmail);
+      // Fetch latest from API (may update cached info)
       lookupUser(savedEmail);
     }
   }, []);
@@ -82,14 +92,17 @@ export default function SubmitPage() {
     try {
       const res = await fetch(`/api/user?email=${encodeURIComponent(userEmail)}`);
       const data = await res.json();
-      setUserInfo({
+      const info = {
         email: data.email,
         trust_points: data.trust_points || 0,
         submissions_count: data.submissions_count || 0,
         tier: data.tier || 'new',
-      });
+      };
+      setUserInfo(info);
       setEmailVerified(true);
       localStorage.setItem('fairprice_email', userEmail.toLowerCase().trim());
+      // Also cache user info locally so it persists between navigations
+      localStorage.setItem('fairprice_user_info', JSON.stringify(info));
     } catch {
       setEmailVerified(false);
     } finally {
@@ -135,14 +148,17 @@ export default function SubmitPage() {
       if (!response.ok) throw new Error(data.error);
 
       setSuccess(true);
-      // Update local user info with new points
+      // Update local user info with new points from API response
       if (data.user) {
-        setUserInfo({
+        const updatedInfo = {
           email: data.user.email,
           trust_points: data.user.trust_points,
           submissions_count: (userInfo?.submissions_count || 0) + 1,
           tier: data.user.tier,
-        });
+        };
+        setUserInfo(updatedInfo);
+        // Cache updated info in localStorage
+        localStorage.setItem('fairprice_user_info', JSON.stringify(updatedInfo));
       }
       setFormData({
         serviceType: '',

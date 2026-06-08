@@ -86,7 +86,7 @@ function LookupContent() {
   const fetchResults = async (service: string, zip: string, quote?: number, units?: number) => {
     // Check search limits
     const currentCount = parseInt(localStorage.getItem('fairprice_search_count') || '0');
-    const maxSearches = !userTier ? 3 : (points < 50 ? 10 : 999);
+    const maxSearches = !userTier ? 10 : (points < 50 ? 20 : 999);
 
     if (currentCount >= maxSearches && points < 50) {
       setSearchLimitReached(true);
@@ -136,14 +136,14 @@ function LookupContent() {
 
   // Gating helpers
   const points = userTier?.trust_points || 0;
-  const isFreeSearch = searchCount <= 3; // First 3 searches are completely free with full access
+  const isFreeSearch = searchCount <= 10; // First 10 searches are completely free with full access
   const canSeeContractors = isFreeSearch || points >= 10;
   const canSeeBreakdown = isFreeSearch || points >= 50;
   const canSeeUnitPricing = isFreeSearch || points >= 50;
 
   // Gate overlay component
   const GatedSection = ({ requiredPoints, requiredTier, children }: { requiredPoints: number; requiredTier: string; children: React.ReactNode }) => {
-    // Always show for first 3 free searches
+    // Always show for first 10 free searches
     if (isFreeSearch || points >= requiredPoints) {
       return <>{children}</>;
     }
@@ -202,7 +202,7 @@ function LookupContent() {
           <h3 className="text-lg font-semibold text-red-800 mb-2">Search Limit Reached</h3>
           <p className="text-sm text-red-700 mb-4">
             {!userTier
-              ? 'You have used your 3 free searches. Enter your email and submit a price to continue.'
+              ? 'You have used your 10 free searches. Enter your email and submit a price to continue.'
               : `You have used your ${points < 50 ? '10' : ''} searches. Submit more prices to earn points and unlock unlimited searches.`
             }
           </p>
