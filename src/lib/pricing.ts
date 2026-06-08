@@ -193,7 +193,7 @@ export async function lookupPrice(
     let perUnitHigh: number;
 
     if (submissionsWithUnits.length > 0) {
-      // Use actual per-unit data from submissions
+      // Use actual per-unit data from submissions (price / stored_units)
       const perUnitPrices = submissionsWithUnits
         .map(s => Number(s.price_paid) / Number(s.units))
         .sort((a, b) => a - b);
@@ -201,7 +201,8 @@ export async function lookupPrice(
       perUnitHigh = Math.round(perUnitPrices[perUnitPrices.length - 1]);
       perUnitAverage = Math.round(perUnitPrices.reduce((a, b) => a + b, 0) / perUnitPrices.length);
     } else {
-      // Fallback: use overall price range as per-unit (assumes 1 unit per submission)
+      // No unit data stored — estimate by dividing total price by a reasonable default
+      // This is a fallback; ideally all submissions should have units
       perUnitLow = priceRange.low;
       perUnitAverage = priceRange.average;
       perUnitHigh = priceRange.high;

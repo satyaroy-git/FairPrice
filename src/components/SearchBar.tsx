@@ -4,52 +4,78 @@ import { useState, useEffect } from 'react';
 import { categories, SubCategory, UnitConfig } from '@/data/categories';
 
 interface SearchBarProps {
-  onSearch: (service: string, zip: string, quote?: number, units?: number) => void;
+  onSearch: (service: string, zip: string, quote?: number, units?: number, category?: string, subcategory?: string) => void;
   showQuoteField?: boolean;
   initialService?: string;
-  lockedCategory?: string; // If set, only show this category (from Browse by Category)
+  initialZip?: string;
+  initialUnits?: string;
+  lockedCategory?: string;
+  initialCategory?: string;
+  initialSubcategory?: string;
 }
 
-export default function SearchBar({ onSearch, showQuoteField = true, initialService = '', lockedCategory }: SearchBarProps) {
-  const [selectedCategory, setSelectedCategory] = useState(lockedCategory || '');
-  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+export default function SearchBar({
+  onSearch,
+  showQuoteField = true,
+  initialService = '',
+  initialZip = '',
+  initialUnits = '',
+  lockedCategory,
+  initialCategory = '',
+  initialSubcategory = '',
+}: SearchBarProps) {
+  const effectiveCategory = lockedCategory || initialCategory;
+  const [selectedCategory, setSelectedCategory] = useState(effectiveCategory);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
   const [service, setService] = useState(initialService);
-  const [zip, setZip] = useState('');
+  const [zip, setZip] = useState(initialZip);
   const [quote, setQuote] = useState('');
-  const [units, setUnits] = useState('');
+  const [units, setUnits] = useState(initialUnits);
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [serviceTypes, setServiceTypes] = useState<string[]>([]);
   const [unitConfig, setUnitConfig] = useState<UnitConfig | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
-  // Initialize with locked category on mount or when lockedCategory changes
+  // Initialize subcategories and service types from initial values
   useEffect(() => {
-    if (lockedCategory) {
-      setSelectedCategory(lockedCategory);
+    if (effectiveCategory && !initialized) {
+      const cat = categories.find(c => c.id === effectiveCategory);
+      if (cat) {
+        setSubcategories(cat.subcategories);
+        if (initialSubcategory) {
+          const sub = cat.subcategories.find(s => s.id === initialSubcategory);
+          if (sub) {
+            setServiceTypes(sub.serviceTypes);
+            setUnitConfig(sub.unitConfig || null);
+          }
+        }
+      }
+      setInitialized(true);
     }
-  }, [lockedCategory]);
+  }, [effectiveCategory, initialSubcategory, initialized]);
 
-  useEffect(() => {
-    if (selectedCategory) {
-      const cat = categories.find(c => c.id === selectedCategory);
+  // When category changes (user action, not initialization)
+  const handleCategoryChange = (newCategory: string) => {
+    setSelectedCategory(newCategory);
+    if (newCategory) {
+      const cat = categories.find(c => c.id === newCategory);
       setSubcategories(cat?.subcategories || []);
-      setSelectedSubcategory('');
-      setService('');
-      setServiceTypes([]);
-      setUnitConfig(null);
-      setUnits('');
     } else {
       setSubcategories([]);
-      setSelectedSubcategory('');
-      setServiceTypes([]);
-      setUnitConfig(null);
-      setUnits('');
     }
-  }, [selectedCategory]);
+    setSelectedSubcategory('');
+    setService('');
+    setServiceTypes([]);
+    setUnitConfig(null);
+    setUnits('');
+  };
 
-  useEffect(() => {
-    if (selectedSubcategory && selectedCategory) {
+  // When subcategory changes (user action)
+  const handleSubcategoryChange = (newSubcategory: string) => {
+    setSelectedSubcategory(newSubcategory);
+    if (newSubcategory && selectedCategory) {
       const cat = categories.find(c => c.id === selectedCategory);
-      const sub = cat?.subcategories.find(s => s.id === selectedSubcategory);
+      const sub = cat?.subcategories.find(s => s.id === newSubcategory);
       setServiceTypes(sub?.serviceTypes || []);
       setUnitConfig(sub?.unitConfig || null);
       setUnits('');
@@ -61,7 +87,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
       setUnitConfig(null);
       setUnits('');
     }
-  }, [selectedSubcategory, selectedCategory]);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +96,9 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
       service.trim(),
       zip.trim(),
       quote ? parseFloat(quote) : undefined,
-      units ? parseFloat(units) : undefined
+      units ? parseFloat(units) : undefined,
+      selectedCategory || undefined,
+      selectedSubcategory || undefined
     );
   };
 
@@ -82,7 +110,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
           <div className="flex-1">
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e) => handleCategoryChange(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100"
               disabled={!!lockedCategory}
             >
@@ -105,7 +133,7 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
           <div className="flex-1">
             <select
               value={selectedSubcategory}
-              onChange={(e) => setSelectedSubcategory(e.target.value)}
+              onChange={(e) => handleSubcategoryChange(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100 disabled:text-gray-400"
               disabled={!selectedCategory}
             >
@@ -147,7 +175,6 @@ export default function SearchBar({ onSearch, showQuoteField = true, initialServ
               />
             )}
           </div>
-          {/* Unit/Area field - shows only when subcategory has unitConfig */}
           {unitConfig && (
             <div className="w-full md:w-44">
               {unitConfig.options ? (

@@ -34,13 +34,20 @@ function LookupContent() {
   const quoteParam = searchParams.get('quote') || '';
   const unitsParam = searchParams.get('units') || '';
   const categoryParam = searchParams.get('category') || '';
+  const subcategoryParam = searchParams.get('subcategory') || '';
 
-  // Load user from localStorage on mount
+  // Free search tracking
+  const [searchCount, setSearchCount] = useState(0);
+  const [searchLimitReached, setSearchLimitReached] = useState(false);
+
+  // Load user and search count from localStorage on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem('fairprice_email');
     if (savedEmail) {
       fetchUserTier(savedEmail);
     }
+    const count = parseInt(localStorage.getItem('fairprice_search_count') || '0');
+    setSearchCount(count);
   }, []);
 
   useEffect(() => {
@@ -75,8 +82,19 @@ function LookupContent() {
   };
 
   const fetchResults = async (service: string, zip: string, quote?: number, units?: number) => {
+    // Check search limits
+    const currentCount = parseInt(localStorage.getItem('fairprice_search_count') || '0');
+    const maxSearches = !userTier ? 3 : (points < 50 ? 10 : 999);
+
+    if (currentCount >= maxSearches && points < 50) {
+      setSearchLimitReached(true);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError('');
+    setSearchLimitReached(false);
     setShowQuoteForm(false);
     setQuoteSubmitted(false);
     setQuoteFormData({ name: '', phone: '', email: '' });
@@ -88,6 +106,11 @@ function LookupContent() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
       setResult(data);
+
+      // Increment search count
+      const newCount = currentCount + 1;
+      localStorage.setItem('fairprice_search_count', String(newCount));
+      setSearchCount(newCount);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -95,10 +118,12 @@ function LookupContent() {
     }
   };
 
-  const handleSearch = (service: string, zip: string, quote?: number, units?: number) => {
+  const handleSearch = (service: string, zip: string, quote?: number, units?: number, category?: string, subcategory?: string) => {
     const params = new URLSearchParams({ service, zip });
     if (quote) params.set('quote', String(quote));
     if (units) params.set('units', String(units));
+    if (category) params.set('category', category);
+    if (subcategory) params.set('subcategory', subcategory);
     router.push(`/lookup?${params.toString()}`);
   };
 
@@ -149,8 +174,33 @@ function LookupContent() {
       <p className="text-gray-600 mb-8">Enter a service and ZIP/PIN code to see fair prices in your area</p>
 
       <div className="card mb-8">
-        <SearchBar onSearch={handleSearch} initialService={serviceParam} lockedCategory={categoryParam || undefined} />
+        <SearchBar
+          onSearch={handleSearch}
+          initialService={serviceParam}
+          initialZip={zipParam}
+          initialUnits={unitsParam}
+          lockedCategory={categoryParam || undefined}
+          initialCategory={categoryParam}
+          initialSubcategory={subcategoryParam}
+        />
       </div>
+
+      {/* Search limit reached */}
+      {searchLimitReached && (
+        <div className="card border-red-200 bg-red-50 text-center py-8 mb-6">
+          <div className="text-4xl mb-3">🔒</div>
+          <h3 className="text-lg font-semibold text-red-800 mb-2">Search Limit Reached</h3>
+          <p className="text-sm text-red-700 mb-4">
+            {!userTier
+              ? 'You have used your 3 free searches. Enter your email and submit a price to continue.'
+              : `You have used your ${points < 50 ? '10' : ''} searches. Submit more prices to earn points and unlock unlimited searches.`
+            }
+          </p>
+          <a href="/submit" className="btn-primary inline-block">
+            Submit a Price to Continue
+          </a>
+        </div>
+      )}
 
       {loading && (
         <div className="text-center py-12">
