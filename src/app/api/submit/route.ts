@@ -71,37 +71,40 @@ export async function POST(request: NextRequest) {
       userEmail: normalizedEmail,
     });
 
-    // Upsert user: create if doesn't exist, increment points if exists
+    // Check if user exists (use maybeSingle to avoid error on 0 rows)
     const { data: existingUser } = await supabase
       .from('users')
       .select('*')
       .eq('email', normalizedEmail)
-      .single();
+      .maybeSingle();
 
     let userPoints = 10;
     let userTier = 'contributor';
+    let submissionsCount = 1;
 
     if (existingUser) {
-      // Update existing user
-      const newPoints = existingUser.trust_points + 10;
-      const newCount = existingUser.submissions_count + 1;
-      userTier = calculateTier(newPoints);
+      // Update existing user — increment points
+      userPoints = (existingUser.trust_points || 0) + 10;
+      submissionsCount = (existingUser.submissions_count || 0) + 1;
+      userTier = calculateTier(userPoints);
 
-      await supabase
+      const { error: updateError } = await supabase
         .from('users')
         .update({
-          trust_points: newPoints,
-          submissions_count: newCount,
+          trust_points: userPoints,
+          submissions_count: submissionsCount,
           tier: userTier,
           updated_at: new Date().toISOString(),
         })
         .eq('email', normalizedEmail);
 
-      userPoints = newPoints;
+      if (updateError) {
+        console.error('User update error:', updateError);
+      }
     } else {
       // Create new user
       userTier = calculateTier(10);
-      await supabase
+      const { error: insertError } = await supabase
         .from('users')
         .insert({
           email: normalizedEmail,
@@ -109,6 +112,34 @@ export async function POST(request: NextRequest) {
           submissions_count: 1,
           tier: userTier,
         });
+
+      if (insertError) {
+        console.error('User insert error:', insertError);
+        // If insert failed due to duplicate, try to fetch and update instead
+        if (insertError.code === '23505') {
+          const { data: retryUser } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', normalizedEmail)
+            .maybeSingle();
+
+          if (retryUser) {
+            userPoints = (retryUser.trust_points || 0) + 10;
+            submissionsCount = (retryUser.submissions_count || 0) + 1;
+            userTier = calculateTier(userPoints);
+
+            await supabase
+              .from('users')
+              .update({
+                trust_points: userPoints,
+                submissions_count: submissionsCount,
+                tier: userTier,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('email', normalizedEmail);
+          }
+        }
+      }
     }
 
     return NextResponse.json({
@@ -117,6 +148,7 @@ export async function POST(request: NextRequest) {
       user: {
         email: normalizedEmail,
         trust_points: userPoints,
+        submissions_count: submissionsCount,
         tier: userTier,
       },
       message: `Thank you! You earned 10 trust points. Total: ${userPoints} points (${userTier} tier).`,
