@@ -22,7 +22,7 @@ export default function HomePage() {
   const handleCategoryClick = (categoryId: string) => {
     const category = categories.find(c => c.id === categoryId);
     if (category) {
-      router.push(`/lookup?category=${categoryId}`);
+      router.push(`/lookup?category=${categoryId}&locked=true`);
     }
   };
 
