@@ -115,19 +115,11 @@ export default function SearchBar({
               disabled={!!lockedCategory}
             >
               <option value="">Select Category</option>
-              {lockedCategory ? (
-                categories.filter(c => c.id === lockedCategory).map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.icon} {cat.name}
-                  </option>
-                ))
-              ) : (
-                categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.icon} {cat.name}
-                  </option>
-                ))
-              )}
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex-1">
