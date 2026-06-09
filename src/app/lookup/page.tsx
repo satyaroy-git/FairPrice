@@ -185,7 +185,6 @@ function LookupContent() {
               initialService={serviceParam}
               initialZip={zipParam}
               initialUnits={unitsParam}
-              lockedCategory={searchParams.get('locked') === 'true' ? categoryParam : undefined}
               initialCategory={categoryParam}
               initialSubcategory={subcategoryParam}
             />

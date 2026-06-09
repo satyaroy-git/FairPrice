@@ -9,7 +9,6 @@ interface SearchBarProps {
   initialService?: string;
   initialZip?: string;
   initialUnits?: string;
-  lockedCategory?: string;
   initialCategory?: string;
   initialSubcategory?: string;
 }
@@ -20,12 +19,10 @@ export default function SearchBar({
   initialService = '',
   initialZip = '',
   initialUnits = '',
-  lockedCategory,
   initialCategory = '',
   initialSubcategory = '',
 }: SearchBarProps) {
-  const effectiveCategory = lockedCategory || initialCategory;
-  const [selectedCategory, setSelectedCategory] = useState(effectiveCategory);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
   const [service, setService] = useState(initialService);
   const [zip, setZip] = useState(initialZip);
@@ -38,8 +35,8 @@ export default function SearchBar({
 
   // Initialize subcategories and service types from initial values
   useEffect(() => {
-    if (effectiveCategory && !initialized) {
-      const cat = categories.find(c => c.id === effectiveCategory);
+    if (initialCategory && !initialized) {
+      const cat = categories.find(c => c.id === initialCategory);
       if (cat) {
         setSubcategories(cat.subcategories);
         if (initialSubcategory) {
@@ -52,9 +49,9 @@ export default function SearchBar({
       }
       setInitialized(true);
     }
-  }, [effectiveCategory, initialSubcategory, initialized]);
+  }, [initialCategory, initialSubcategory, initialized]);
 
-  // When category changes (user action, not initialization)
+  // When category changes (user action)
   const handleCategoryChange = (newCategory: string) => {
     setSelectedCategory(newCategory);
     if (newCategory) {
@@ -111,8 +108,7 @@ export default function SearchBar({
             <select
               value={selectedCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white disabled:bg-gray-100 text-base"
-              disabled={!!lockedCategory}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white text-base"
             >
               <option value="">Select Category</option>
               {categories.map(cat => (
@@ -162,7 +158,7 @@ export default function SearchBar({
                 placeholder="What service? (e.g., water heater installation)"
                 value={service}
                 onChange={(e) => setService(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400 text-base"
                 required
               />
             )}
@@ -173,7 +169,7 @@ export default function SearchBar({
                 <select
                   value={units}
                   onChange={(e) => setUnits(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white text-base"
                 >
                   <option value="">{unitConfig.label}</option>
                   {unitConfig.options.map(opt => (
@@ -188,7 +184,7 @@ export default function SearchBar({
                   placeholder={unitConfig.label}
                   value={units}
                   onChange={(e) => setUnits(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 bg-white placeholder-gray-400 text-base"
                   min="1"
                   step="any"
                 />
