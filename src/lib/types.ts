@@ -52,12 +52,19 @@ export interface UnitPricing {
   totalEstimateHigh: number;
 }
 
+export interface PriceHistoryPoint {
+  month: string;
+  average: number;
+  count: number;
+}
+
 export interface LookupResult {
   serviceType: string;
   zipCode: string;
   currency: CurrencyInfo;
   priceRange: PriceRange;
   unitPricing?: UnitPricing;
+  priceHistory: PriceHistoryPoint[];
   breakdown: BreakdownItem[];
   contractors: ContractorScore[];
   recentSubmissions: PriceSubmission[];

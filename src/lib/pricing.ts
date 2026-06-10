@@ -1,4 +1,4 @@
-import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing } from './types';
+import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing, PriceHistoryPoint } from './types';
 import { detectCurrency } from './currency';
 import { supabase } from './supabase';
 import { categories } from '@/data/categories';
@@ -130,6 +130,41 @@ function calculateContractorScores(
 }
 
 /**
+ * Generate monthly price history from submissions
+ */
+function generatePriceHistory(submissions: DbSubmission[]): PriceHistoryPoint[] {
+  if (submissions.length === 0) return [];
+
+  const monthlyData: Record<string, { prices: number[]; count: number }> = {};
+
+  submissions.forEach(s => {
+    const date = new Date(s.submitted_at);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const monthLabel = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = { prices: [], count: 0 };
+    }
+    monthlyData[monthKey].prices.push(Number(s.price_paid));
+    monthlyData[monthKey].count++;
+  });
+
+  // Sort by month and return last 6 months
+  return Object.entries(monthlyData)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-6)
+    .map(([key, data]) => {
+      const [year, month] = key.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1);
+      return {
+        month: date.toLocaleString('default', { month: 'short' }),
+        average: Math.round(data.prices.reduce((a, b) => a + b, 0) / data.prices.length),
+        count: data.count,
+      };
+    });
+}
+
+/**
  * Main lookup function - queries Supabase
  */
 export async function lookupPrice(
@@ -239,12 +274,16 @@ export async function lookupPrice(
     }
   }
 
+  // Generate price history (group by month)
+  const priceHistory = generatePriceHistory(submissions);
+
   return {
     serviceType: normalizedService,
     zipCode,
     currency,
     priceRange,
     unitPricing,
+    priceHistory,
     breakdown,
     contractors,
     recentSubmissions: submissions.slice(0, 5).map(s => ({

@@ -6,6 +6,8 @@ import SearchBar from '@/components/SearchBar';
 import VerdictBadge from '@/components/VerdictBadge';
 import PriceRangeBar from '@/components/PriceRangeBar';
 import ContractorTable from '@/components/ContractorTable';
+import WhatsAppShare from '@/components/WhatsAppShare';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import { LookupResult } from '@/lib/types';
 
 interface UserTier {
@@ -269,6 +271,20 @@ function LookupContent() {
                   userQuote={result.priceRange.userQuote}
                   currency={result.currency}
                 />
+
+                {/* Share Button */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <WhatsAppShare
+                    serviceType={result.serviceType}
+                    zipCode={result.zipCode}
+                    low={result.priceRange.low}
+                    average={result.priceRange.average}
+                    high={result.priceRange.high}
+                    currency={result.currency}
+                    verdict={result.priceRange.verdict}
+                    userQuote={result.priceRange.userQuote}
+                  />
+                </div>
               </div>
 
               {/* Email gate - show if user not identified AND past free searches */}
@@ -362,6 +378,15 @@ function LookupContent() {
                 <GatedSection requiredPoints={10} requiredTier="Contributor">
                   <ContractorTable contractors={result.contractors} />
                 </GatedSection>
+              )}
+
+              {/* Price History Chart */}
+              {result.priceHistory && result.priceHistory.length >= 2 && (
+                <PriceHistoryChart
+                  data={result.priceHistory}
+                  currency={result.currency}
+                  serviceType={result.serviceType}
+                />
               )}
 
               {/* Get 3 Quotes CTA - Always visible */}

@@ -29,6 +29,9 @@ export default function RootLayout({
                 <a href="/lookup" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Lookup
                 </a>
+                <a href="/contractors" className="hidden sm:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                  For Contractors
+                </a>
                 <a href="/submit" className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-lg transition-colors">
                   Submit
                 </a>
@@ -52,6 +55,8 @@ export default function RootLayout({
                 <ul className="space-y-2 text-sm">
                   <li><a href="/lookup" className="hover:text-white transition-colors">Look Up a Price</a></li>
                   <li><a href="/submit" className="hover:text-white transition-colors">Submit a Price</a></li>
+                  <li><a href="/alerts" className="hover:text-white transition-colors">Price Alerts</a></li>
+                  <li><a href="/contractors" className="hover:text-white transition-colors">For Contractors</a></li>
                 </ul>
               </div>
               <div>
