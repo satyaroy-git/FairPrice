@@ -1,0 +1,200 @@
+service_type,category_id,zip_code,price_paid,units,unit_type,company_name,job_description
+ac service,hvac,110001,999,1,ACs,Urban Company,Split AC foam jet cleaning 1.5 ton
+ac service,hvac,110001,1499,1,ACs,Urban Company,Split AC deep clean with gas check
+ac gas refill,hvac,110001,2499,1,ACs,Urban Company,Split AC gas refill R32
+ac installation,hvac,110001,1599,1,ACs,Urban Company,Split AC install with 3ft piping
+ac service,hvac,400001,1099,1,ACs,Urban Company,Split AC foam cleaning Mumbai
+ac service,hvac,400001,1599,1,ACs,Jeeves,Split AC deep clean Mumbai
+ac service,hvac,560001,899,1,ACs,Urban Company,Split AC basic cleaning Bangalore
+ac service,hvac,560001,1399,1,ACs,HomeCare Services,Split AC deep clean Bangalore
+ac service,hvac,600001,999,1,ACs,Urban Company,Split AC cleaning Chennai
+ac service,hvac,500001,899,1,ACs,Urban Company,Split AC cleaning Hyderabad
+ac service,hvac,700001,999,1,ACs,Urban Company,Split AC cleaning Kolkata
+ac service,hvac,411001,999,1,ACs,Urban Company,Split AC cleaning Pune
+ac service,hvac,302001,799,1,ACs,Local Service,Split AC cleaning Jaipur
+ac service,hvac,226001,799,1,ACs,Local Technician,AC cleaning Lucknow
+ac service,hvac,380001,899,1,ACs,Urban Company,Split AC cleaning Ahmedabad
+ac service,hvac,751001,799,1,ACs,Local Technician,AC cleaning Bhubaneswar
+ac service,hvac,201301,999,1,ACs,Urban Company,Split AC cleaning Noida
+ac service,hvac,122001,1099,1,ACs,Urban Company,Split AC cleaning Gurgaon
+deep cleaning,cleaning,110001,2999,1,BHK,Urban Company,1BHK deep cleaning 3-4 hours
+deep cleaning,cleaning,110001,3999,2,BHK,Urban Company,2BHK deep cleaning 4-5 hours
+deep cleaning,cleaning,110001,5499,3,BHK,Urban Company,3BHK deep cleaning 5-6 hours
+deep cleaning,cleaning,400001,3499,1,BHK,Urban Company,1BHK deep cleaning Mumbai
+deep cleaning,cleaning,400001,4499,2,BHK,Urban Company,2BHK deep cleaning Mumbai
+deep cleaning,cleaning,560001,2799,1,BHK,Urban Company,1BHK deep cleaning Bangalore
+deep cleaning,cleaning,560001,3799,2,BHK,Urban Company,2BHK deep cleaning Bangalore
+deep cleaning,cleaning,600001,2599,1,BHK,Urban Company,1BHK deep cleaning Chennai
+deep cleaning,cleaning,500001,2799,1,BHK,Urban Company,1BHK deep cleaning Hyderabad
+deep cleaning,cleaning,700001,2499,1,BHK,Urban Company,1BHK deep cleaning Kolkata
+deep cleaning,cleaning,411001,2799,1,BHK,Urban Company,1BHK deep cleaning Pune
+deep cleaning,cleaning,302001,2299,1,BHK,Local Service,1BHK cleaning Jaipur
+deep cleaning,cleaning,226001,2199,1,BHK,Local Service,1BHK cleaning Lucknow
+deep cleaning,cleaning,380001,2599,1,BHK,Urban Company,1BHK cleaning Ahmedabad
+deep cleaning,cleaning,751001,1999,1,BHK,Local Cleaning,1BHK cleaning Bhubaneswar
+deep cleaning,cleaning,201301,2999,1,BHK,Urban Company,1BHK cleaning Noida
+deep cleaning,cleaning,122001,3199,1,BHK,Urban Company,1BHK cleaning Gurgaon
+sofa cleaning,cleaning,110001,599,1,items,Urban Company,Single seater sofa shampooing
+sofa cleaning,cleaning,110001,1499,5,items,Urban Company,5 seater sofa shampooing
+general pest control,pest-control,110001,1199,2,BHK,Urban Company,2BHK cockroach + ant treatment
+general pest control,pest-control,110001,1599,3,BHK,Urban Company,3BHK comprehensive pest
+general pest control,pest-control,400001,1399,2,BHK,Urban Company,2BHK pest Mumbai
+general pest control,pest-control,560001,1099,2,BHK,Urban Company,2BHK pest Bangalore
+general pest control,pest-control,600001,1199,2,BHK,Urban Company,2BHK pest Chennai
+general pest control,pest-control,500001,1099,2,BHK,Urban Company,2BHK pest Hyderabad
+general pest control,pest-control,700001,999,2,BHK,Urban Company,2BHK pest Kolkata
+general pest control,pest-control,411001,1199,2,BHK,Urban Company,2BHK pest Pune
+general pest control,pest-control,302001,899,2,BHK,Local Service,2BHK pest Jaipur
+general pest control,pest-control,226001,799,2,BHK,Local Service,2BHK pest Lucknow
+general pest control,pest-control,380001,999,2,BHK,Urban Company,2BHK pest Ahmedabad
+general pest control,pest-control,751001,799,2,BHK,Local Service,2BHK pest Bhubaneswar
+general pest control,pest-control,201301,1199,2,BHK,Urban Company,2BHK pest Noida
+general pest control,pest-control,122001,1299,2,BHK,Urban Company,2BHK pest Gurgaon
+termite treatment,pest-control,110001,3499,2,BHK,Urban Company,2BHK anti-termite drilling
+termite treatment,pest-control,400001,3999,2,BHK,Hicare Mumbai,2BHK termite Mumbai
+termite treatment,pest-control,560001,3299,2,BHK,Hicare Bangalore,2BHK termite Bangalore
+termite treatment,pest-control,600001,3499,2,BHK,Urban Company,2BHK termite Chennai
+termite treatment,pest-control,500001,3299,2,BHK,Urban Company,2BHK termite Hyderabad
+house painting,home-exterior,110001,25000,1000,sq ft,Asian Paints,1BHK standard emulsion
+house painting,home-exterior,110001,45000,1800,sq ft,Asian Paints,2BHK premium royale
+house painting,home-exterior,400001,30000,1000,sq ft,Asian Paints,1BHK standard Mumbai
+house painting,home-exterior,560001,22000,1000,sq ft,Asian Paints,1BHK standard Bangalore
+house painting,home-exterior,600001,20000,1000,sq ft,Local Painter,1BHK standard Chennai
+house painting,home-exterior,500001,22000,1000,sq ft,Berger Paints,1BHK standard Hyderabad
+house painting,home-exterior,700001,18000,1000,sq ft,Local Painter,1BHK standard Kolkata
+house painting,home-exterior,411001,22000,1000,sq ft,Asian Paints,1BHK standard Pune
+house painting,home-exterior,302001,16000,1000,sq ft,Local Painter,1BHK standard Jaipur
+house painting,home-exterior,226001,15000,1000,sq ft,Local Painter,1BHK standard Lucknow
+house painting,home-exterior,380001,20000,1000,sq ft,Local Painter,1BHK standard Ahmedabad
+house painting,home-exterior,751001,14000,1000,sq ft,Local Painter,1BHK standard Bhubaneswar
+house painting,home-exterior,201301,25000,1000,sq ft,Asian Paints,1BHK standard Noida
+house painting,home-exterior,122001,28000,1000,sq ft,Asian Paints,1BHK premium Gurgaon
+terrace waterproofing,home-exterior,110001,12000,500,sq ft,Dr Fixit,500 sqft terrace chemical
+terrace waterproofing,home-exterior,400001,14000,500,sq ft,Mumbai Waterproof,500 sqft Mumbai
+terrace waterproofing,home-exterior,560001,11000,500,sq ft,Local Contractor,500 sqft Bangalore
+leak fix,plumbing,110001,800,1,leaks,Urban Company,Minor tap leak fix
+leak fix,plumbing,110001,1500,1,leaks,Urban Company,Pipe joint leak repair
+leak fix,plumbing,110001,3000,1,leaks,Delhi Plumbing,Concealed pipe leak
+drain cleaning,plumbing,110001,999,1,drains,Urban Company,Kitchen drain blockage
+drain cleaning,plumbing,110001,1499,1,drains,Urban Company,Bathroom drain deep blockage
+water heater installation,plumbing,110001,1299,15,L,Urban Company,Geyser install 15L
+water heater installation,plumbing,110001,1799,25,L,Urban Company,Geyser install 25L
+leak fix,plumbing,400001,1000,1,leaks,Urban Company,Tap leak fix Mumbai
+leak fix,plumbing,560001,800,1,leaks,Urban Company,Tap leak fix Bangalore
+leak fix,plumbing,600001,700,1,leaks,Local Plumber,Tap leak fix Chennai
+leak fix,plumbing,500001,750,1,leaks,Urban Company,Tap leak fix Hyderabad
+leak fix,plumbing,700001,600,1,leaks,Local Plumber,Tap leak fix Kolkata
+leak fix,plumbing,411001,800,1,leaks,Urban Company,Tap leak fix Pune
+leak fix,plumbing,302001,500,1,leaks,Local Plumber,Tap leak fix Jaipur
+leak fix,plumbing,226001,500,1,leaks,Local Plumber,Tap leak fix Lucknow
+leak fix,plumbing,380001,700,1,leaks,Urban Company,Tap leak fix Ahmedabad
+leak fix,plumbing,751001,450,1,leaks,Local Plumber,Tap leak fix Bhubaneswar
+wiring repair,electrical,110001,3500,1,rooms,Urban Company,Single room rewiring
+house rewiring,electrical,110001,15000,3,rooms,Delhi Electricals,Full 2BHK rewiring
+inverter installation,electrical,110001,1999,1,units,Urban Company,Inverter hookup
+wiring repair,electrical,400001,4000,1,rooms,Mumbai Electricals,Single room Mumbai
+wiring repair,electrical,560001,3000,1,rooms,Urban Company,Single room Bangalore
+wiring repair,electrical,600001,3000,1,rooms,Local Electrician,Single room Chennai
+wiring repair,electrical,500001,3000,1,rooms,Urban Company,Single room Hyderabad
+wiring repair,electrical,700001,2500,1,rooms,Local Electrician,Single room Kolkata
+wiring repair,electrical,411001,3000,1,rooms,Urban Company,Single room Pune
+wiring repair,electrical,302001,2000,1,rooms,Local Electrician,Single room Jaipur
+wiring repair,electrical,226001,2000,1,rooms,Local Electrician,Single room Lucknow
+wiring repair,electrical,380001,2500,1,rooms,Urban Company,Single room Ahmedabad
+wiring repair,electrical,751001,1800,1,rooms,Local Electrician,Single room Bhubaneswar
+car service,auto-repair,110001,4999,1,units,GoMechanic,Full service oil+filters+AC
+car service,auto-repair,110001,2999,1,units,GoMechanic,Basic service oil+filter
+brake pads replacement,auto-repair,110001,2499,1,units,GoMechanic,Front brake pads ceramic
+car service,auto-repair,400001,5499,1,units,GoMechanic,Full service Mumbai
+car service,auto-repair,560001,4499,1,units,GoMechanic,Full service Bangalore
+car service,auto-repair,600001,4499,1,units,GoMechanic,Full service Chennai
+car service,auto-repair,500001,4299,1,units,GoMechanic,Full service Hyderabad
+car service,auto-repair,700001,3999,1,units,Local Garage,Full service Kolkata
+car service,auto-repair,411001,4499,1,units,GoMechanic,Full service Pune
+car service,auto-repair,302001,3499,1,units,Local Garage,Full service Jaipur
+car service,auto-repair,226001,2999,1,units,Local Garage,Full service Lucknow
+car service,auto-repair,380001,3999,1,units,GoMechanic,Full service Ahmedabad
+car service,auto-repair,751001,2999,1,units,Local Garage,Full service Bhubaneswar
+root canal,dental,110001,5000,1,teeth,Clove Dental,Front tooth single canal
+root canal,dental,110001,8000,1,teeth,Clove Dental,Molar root canal
+root canal,dental,110001,12000,1,teeth,Max Dental,Root canal + ceramic crown
+dental cleaning,dental,110001,999,1,teeth,Clove Dental,Scaling and polishing
+dental implant,dental,110001,25000,1,implants,Clove Dental,Single titanium implant
+root canal,dental,400001,6000,1,teeth,Sabka Dentist,Front tooth Mumbai
+root canal,dental,400001,9000,1,teeth,Sabka Dentist,Molar Mumbai
+root canal,dental,560001,5000,1,teeth,Clove Dental,Front tooth Bangalore
+root canal,dental,560001,8000,1,teeth,Clove Dental,Molar Bangalore
+root canal,dental,600001,4500,1,teeth,Local Dentist,Front tooth Chennai
+root canal,dental,500001,5000,1,teeth,Clove Dental,Front tooth Hyderabad
+root canal,dental,700001,4000,1,teeth,Local Dentist,Front tooth Kolkata
+root canal,dental,411001,5000,1,teeth,Sabka Dentist,Front tooth Pune
+root canal,dental,302001,3500,1,teeth,Local Dentist,Front tooth Jaipur
+root canal,dental,226001,3500,1,teeth,Local Dentist,Front tooth Lucknow
+root canal,dental,751001,3000,1,teeth,Local Dentist,Front tooth Bhubaneswar
+local move,moving,110001,4999,1,BHK,Porter,1BHK within Delhi 10km
+local move,moving,110001,8999,2,BHK,Porter,2BHK within Delhi 15km
+local move,moving,110001,14999,3,BHK,Agarwal Packers,3BHK within Delhi 20km
+local move,moving,400001,5999,1,BHK,Porter,1BHK within Mumbai 10km
+local move,moving,400001,9999,2,BHK,Porter,2BHK within Mumbai 15km
+local move,moving,560001,4499,1,BHK,Porter,1BHK within Bangalore 10km
+local move,moving,560001,7999,2,BHK,Porter,2BHK within Bangalore 15km
+local move,moving,600001,3999,1,BHK,Local Movers,1BHK within Chennai 10km
+local move,moving,500001,3999,1,BHK,Porter,1BHK within Hyderabad 10km
+local move,moving,700001,3499,1,BHK,Local Packers,1BHK within Kolkata 10km
+local move,moving,411001,4499,1,BHK,Porter,1BHK within Pune 10km
+local move,moving,302001,2999,1,BHK,Local Movers,1BHK within Jaipur 10km
+local move,moving,226001,2499,1,BHK,Local Movers,1BHK within Lucknow 10km
+local move,moving,751001,2499,1,BHK,Local Movers,1BHK within Bhubaneswar
+modular kitchen,interior-design,110001,120000,60,sq ft,HomeLane,Straight kitchen laminate basic
+modular kitchen,interior-design,110001,180000,80,sq ft,HomeLane,L-shape kitchen laminate
+modular kitchen,interior-design,110001,250000,80,sq ft,Livspace,L-shape kitchen acrylic premium
+modular kitchen,interior-design,400001,140000,60,sq ft,HomeLane,Straight kitchen Mumbai
+modular kitchen,interior-design,560001,110000,60,sq ft,HomeLane,Straight kitchen Bangalore
+modular kitchen,interior-design,600001,100000,60,sq ft,Local Interior,Straight kitchen Chennai
+modular kitchen,interior-design,500001,110000,60,sq ft,HomeLane,Straight kitchen Hyderabad
+modular kitchen,interior-design,700001,90000,60,sq ft,Local Interior,Straight kitchen Kolkata
+modular kitchen,interior-design,411001,110000,60,sq ft,HomeLane,Straight kitchen Pune
+modular kitchen,interior-design,302001,80000,60,sq ft,Local Carpenter,Straight kitchen Jaipur
+modular kitchen,interior-design,751001,65000,60,sq ft,Local Carpenter,Straight kitchen Bhubaneswar
+false ceiling installation,interior-design,110001,12000,100,sq ft,Local Contractor,Gypsum ceiling 100 sqft
+false ceiling installation,interior-design,110001,18000,150,sq ft,Delhi Interiors,Gypsum with cove light
+false ceiling installation,interior-design,400001,14000,100,sq ft,Mumbai Interior,Gypsum ceiling Mumbai
+false ceiling installation,interior-design,560001,11000,100,sq ft,Local Contractor,Gypsum Bangalore
+custom wardrobe,carpentry,110001,45000,30,sq ft,HomeLane,6ft sliding wardrobe laminate
+custom wardrobe,carpentry,110001,65000,40,sq ft,Livspace,8ft wardrobe with loft
+custom wardrobe,carpentry,400001,50000,30,sq ft,HomeLane,6ft sliding Mumbai
+custom wardrobe,carpentry,560001,42000,30,sq ft,HomeLane,6ft sliding Bangalore
+custom wardrobe,carpentry,600001,38000,30,sq ft,Local Carpenter,6ft wardrobe Chennai
+custom wardrobe,carpentry,500001,40000,30,sq ft,Local Carpenter,6ft wardrobe Hyderabad
+custom wardrobe,carpentry,700001,32000,30,sq ft,Local Carpenter,6ft wardrobe Kolkata
+custom wardrobe,carpentry,411001,42000,30,sq ft,HomeLane,6ft sliding Pune
+custom wardrobe,carpentry,302001,28000,30,sq ft,Local Carpenter,6ft wardrobe Jaipur
+custom wardrobe,carpentry,751001,22000,30,sq ft,Local Carpenter,6ft wardrobe Bhubaneswar
+cctv installation,home-security,110001,8999,4,cameras,Urban Company,4 HD cameras + DVR
+cctv installation,home-security,110001,14999,8,cameras,SecureHome,8 camera system
+cctv installation,home-security,400001,9999,4,cameras,Mumbai Security,4 camera Mumbai
+cctv installation,home-security,560001,8499,4,cameras,Local Vendor,4 camera Bangalore
+cctv installation,home-security,600001,7999,4,cameras,Local Vendor,4 camera Chennai
+cctv installation,home-security,500001,7999,4,cameras,Local Vendor,4 camera Hyderabad
+cctv installation,home-security,700001,6999,4,cameras,Local Vendor,4 camera Kolkata
+cctv installation,home-security,411001,8499,4,cameras,Local Vendor,4 camera Pune
+cctv installation,home-security,302001,6999,4,cameras,Local Vendor,4 camera Jaipur
+cctv installation,home-security,751001,5999,4,cameras,Local Vendor,4 camera Bhubaneswar
+smart lock install,home-security,110001,3499,1,locks,Urban Company,Fingerprint lock main door
+washing machine repair,appliance-repair,110001,1500,1,units,Urban Company,Drum bearing top load
+washing machine repair,appliance-repair,110001,2500,1,units,Urban Company,Drain pump front load
+refrigerator repair,appliance-repair,110001,2000,1,units,Urban Company,Thermostat replacement
+RO service,appliance-repair,110001,649,1,units,Urban Company,Filter change + cleaning
+RO service,appliance-repair,110001,1499,1,units,Aquaguard,Full membrane + filter change
+RO service,appliance-repair,400001,749,1,units,Urban Company,Filter change Mumbai
+RO service,appliance-repair,560001,649,1,units,Urban Company,Filter change Bangalore
+RO service,appliance-repair,600001,599,1,units,Local Service,Filter change Chennai
+RO service,appliance-repair,500001,599,1,units,Urban Company,Filter change Hyderabad
+RO service,appliance-repair,700001,549,1,units,Local Service,Filter change Kolkata
+RO service,appliance-repair,411001,649,1,units,Urban Company,Filter change Pune
+RO service,appliance-repair,751001,449,1,units,Local Service,Filter change Bhubaneswar
+denting and painting,auto-repair,110001,3500,1,panels,GoMechanic,Single panel minor dent
+denting and painting,auto-repair,110001,6500,2,panels,GoMechanic,2 panel denting
+car ac gas refill,auto-repair,110001,2999,1,units,GoMechanic,Full AC gas refill
+tyre replacement,auto-repair,110001,4500,1,units,MRF Dealer,Single tyre 185/65 R15
+wheel alignment,auto-repair,110001,799,1,units,GoMechanic,Front wheel alignment
