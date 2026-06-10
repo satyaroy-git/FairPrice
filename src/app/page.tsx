@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/SearchBar';
 import CategoryCard from '@/components/CategoryCard';
@@ -8,7 +7,6 @@ import { categories } from '@/data/categories';
 
 export default function HomePage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
 
   const handleSearch = (service: string, zip: string, quote?: number, units?: number, category?: string, subcategory?: string) => {
     const params = new URLSearchParams({ service, zip });
@@ -127,18 +125,9 @@ export default function HomePage() {
           <p className="text-gray-600 mb-6">
             Get notified when prices drop for services in your area. Perfect for non-urgent work — time your purchase right.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field flex-1"
-            />
-            <button className="btn-primary whitespace-nowrap">
-              Set Alert
-            </button>
-          </div>
+          <a href="/alerts" className="btn-primary inline-block">
+            Set Up Price Alerts
+          </a>
           <p className="text-xs text-gray-500 mt-3">We&apos;ll notify you when prices change in your area. No spam.</p>
         </div>
       </section>
