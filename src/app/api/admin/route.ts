@@ -156,3 +156,170 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json({ success: true, message: `${tab} record deleted.` });
 }
+
+
+/**
+ * POST /api/admin — Bulk CSV import of submissions
+ */
+export async function POST(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const supabase = getServiceSupabase();
+
+  try {
+    const body = await request.json();
+    const { csv } = body;
+
+    if (!csv || typeof csv !== 'string') {
+      return NextResponse.json({ error: 'CSV data is required' }, { status: 400 });
+    }
+
+    // Parse CSV
+    const lines = csv.trim().split('\n');
+    if (lines.length < 2) {
+      return NextResponse.json({ error: 'CSV must have a header row and at least one data row' }, { status: 400 });
+    }
+
+    // Parse header
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const requiredHeaders = ['service_type', 'category_id', 'zip_code', 'price_paid'];
+    const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+
+    if (missingHeaders.length > 0) {
+      return NextResponse.json({
+        error: `Missing required columns: ${missingHeaders.join(', ')}`,
+      }, { status: 400 });
+    }
+
+    const validCategories = [
+      'plumbing', 'electrical', 'auto-repair', 'home-exterior', 'landscaping',
+      'dental', 'moving', 'hvac', 'appliance-repair', 'pest-control',
+      'cleaning', 'home-security', 'carpentry', 'interior-design',
+    ];
+
+    // Parse data rows
+    const rows: Record<string, unknown>[] = [];
+    const errors: string[] = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue; // skip empty lines
+
+      // Handle CSV with commas in quoted fields
+      const values = parseCSVLine(line);
+
+      if (values.length !== headers.length) {
+        errors.push(`Column count mismatch (expected ${headers.length}, got ${values.length})`);
+        continue;
+      }
+
+      const row: Record<string, unknown> = {};
+      headers.forEach((header, idx) => {
+        row[header] = values[idx]?.trim() || null;
+      });
+
+      // Validate required fields
+      if (!row.service_type || !row.category_id || !row.zip_code || !row.price_paid) {
+        errors.push(`Missing required field (service_type, category_id, zip_code, or price_paid)`);
+        continue;
+      }
+
+      // Validate category_id
+      if (!validCategories.includes(row.category_id as string)) {
+        errors.push(`Invalid category_id "${row.category_id}"`);
+        continue;
+      }
+
+      // Validate zip_code
+      const zipCode = String(row.zip_code);
+      if (!/^\d{5,6}$/.test(zipCode)) {
+        errors.push(`Invalid zip_code "${row.zip_code}" (must be 5 or 6 digits)`);
+        continue;
+      }
+
+      // Validate price_paid
+      const pricePaid = parseFloat(row.price_paid as string);
+      if (isNaN(pricePaid) || pricePaid <= 0) {
+        errors.push(`Invalid price_paid "${row.price_paid}" (must be a positive number)`);
+        continue;
+      }
+
+      // Build submission record
+      const submission: Record<string, unknown> = {
+        service_type: (row.service_type as string).toLowerCase().trim(),
+        category_id: (row.category_id as string).toLowerCase().trim(),
+        zip_code: zipCode,
+        price_paid: pricePaid,
+        units: row.units ? parseFloat(row.units as string) : null,
+        unit_type: row.unit_type || null,
+        company_name: row.company_name || null,
+        job_description: row.job_description || null,
+      };
+
+      rows.push(submission);
+    }
+
+    if (rows.length === 0) {
+      return NextResponse.json({
+        error: 'No valid rows to import',
+        errors,
+      }, { status: 400 });
+    }
+
+    // Insert in batches of 50
+    let imported = 0;
+    const batchSize = 50;
+
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      const { data, error } = await supabase
+        .from('submissions')
+        .insert(batch)
+        .select();
+
+      if (error) {
+        errors.push(`Batch ${Math.floor(i / batchSize) + 1} failed: ${error.message}`);
+      } else {
+        imported += (data?.length || 0);
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      imported,
+      total: rows.length,
+      errors: errors.length > 0 ? errors : undefined,
+      message: `Imported ${imported} of ${rows.length} rows.${errors.length > 0 ? ` ${errors.length} rows had errors.` : ''}`,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Import failed';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+/**
+ * Parse a CSV line handling quoted fields (commas inside quotes)
+ */
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current);
+
+  return result;
+}

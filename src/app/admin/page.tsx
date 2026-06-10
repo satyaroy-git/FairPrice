@@ -148,11 +148,46 @@ export default function AdminPage() {
   }
 
   // Admin Dashboard
+  // Bulk import state
+  const [csvText, setCsvText] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ success?: number; errors?: string[] } | null>(null);
+
+  const handleBulkImport = async () => {
+    if (!csvText.trim()) return;
+    setImporting(true);
+    setImportResult(null);
+
+    try {
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': password,
+        },
+        body: JSON.stringify({ csv: csvText }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
+      setImportResult({ success: result.imported, errors: result.errors || [] });
+      if (result.imported > 0) {
+        setCsvText('');
+        fetchData('submissions', 1, '');
+      }
+    } catch (err) {
+      setImportResult({ success: 0, errors: [err instanceof Error ? err.message : 'Import failed'] });
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const tabs = [
     { id: 'submissions', label: '📝 Submissions', count: stats?.submissions },
     { id: 'users', label: '👥 Users', count: stats?.users },
     { id: 'leads', label: '📊 Leads', count: stats?.leads },
     { id: 'alerts', label: '🔔 Alerts', count: stats?.alerts },
+    { id: 'import', label: '📥 Bulk Import', count: undefined },
   ];
 
   const getColumns = (tab: string): string[] => {
@@ -229,6 +264,7 @@ export default function AdminPage() {
         </div>
 
         {/* Search */}
+        {activeTab !== 'import' && (
         <form onSubmit={handleSearch} className="flex gap-3 mb-6">
           <input
             type="text"
@@ -248,9 +284,84 @@ export default function AdminPage() {
             </button>
           )}
         </form>
+        )}
+
+        {/* Bulk Import Panel */}
+        {activeTab === 'import' && (
+          <div className="card mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📥 Bulk CSV Import</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Paste CSV data below to bulk-import price submissions. First row must be headers.
+            </p>
+
+            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <p className="text-xs font-medium text-gray-700 mb-2">Required CSV format (copy this as your first row):</p>
+              <code className="text-xs bg-white px-3 py-2 rounded border block overflow-x-auto">
+                service_type,category_id,zip_code,price_paid,units,unit_type,company_name,job_description
+              </code>
+              <p className="text-xs text-gray-500 mt-2">
+                <strong>Required:</strong> service_type, category_id, zip_code, price_paid<br />
+                <strong>Optional:</strong> units, unit_type, company_name, job_description
+              </p>
+              <div className="mt-3">
+                <p className="text-xs font-medium text-gray-700 mb-1">Example rows:</p>
+                <pre className="text-xs bg-white px-3 py-2 rounded border overflow-x-auto whitespace-pre-wrap">
+{`service_type,category_id,zip_code,price_paid,units,unit_type,company_name,job_description
+ac service,hvac,110001,1500,1,ACs,Urban Company,Split AC deep cleaning 1.5 ton
+modular kitchen,interior-design,110001,180000,80,sq ft,HomeLane,L-shape modular kitchen acrylic finish
+root canal,dental,560001,9000,1,teeth,Clove Dental,Molar root canal without crown
+house painting,home-exterior,400001,55000,1200,sq ft,Asian Paints,3BHK interior premium finish`}
+                </pre>
+              </div>
+              <div className="mt-3">
+                <p className="text-xs font-medium text-gray-700 mb-1">Valid category_id values:</p>
+                <p className="text-xs text-gray-500">
+                  plumbing, electrical, auto-repair, home-exterior, landscaping, dental, moving, hvac, appliance-repair, pest-control, cleaning, home-security, carpentry, interior-design
+                </p>
+              </div>
+            </div>
+
+            <textarea
+              value={csvText}
+              onChange={(e) => setCsvText(e.target.value)}
+              placeholder="Paste your CSV data here (include header row)..."
+              className="input-field font-mono text-xs min-h-[200px] resize-y"
+              rows={10}
+            />
+
+            {importResult && (
+              <div className={`mt-4 p-4 rounded-lg ${importResult.success ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'}`}>
+                {importResult.success !== undefined && importResult.success > 0 && (
+                  <p className="text-emerald-700 font-medium">✅ Successfully imported {importResult.success} rows!</p>
+                )}
+                {importResult.errors && importResult.errors.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-red-700 font-medium text-sm">Errors ({importResult.errors.length}):</p>
+                    <ul className="text-xs text-red-600 mt-1 max-h-[150px] overflow-y-auto space-y-1">
+                      {importResult.errors.slice(0, 20).map((err, i) => (
+                        <li key={i}>Row {i + 2}: {err}</li>
+                      ))}
+                      {importResult.errors.length > 20 && (
+                        <li>...and {importResult.errors.length - 20} more errors</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button
+              onClick={handleBulkImport}
+              disabled={importing || !csvText.trim()}
+              className="btn-primary mt-4 disabled:opacity-50"
+            >
+              {importing ? 'Importing...' : `Import CSV Data`}
+            </button>
+          </div>
+        )}
 
         {/* Data Table */}
-        {loading ? (
+        {activeTab !== 'import' && (loading ? (
           <div className="text-center py-12 text-gray-500">Loading...</div>
         ) : (
           <div className="overflow-x-auto">
@@ -295,10 +406,10 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
-        )}
+        ))}
 
         {/* Pagination */}
-        {pagination.totalPages > 1 && (
+        {activeTab !== 'import' && pagination.totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <p className="text-sm text-gray-500">
               Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
