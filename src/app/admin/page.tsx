@@ -28,6 +28,11 @@ export default function AdminPage() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Bulk import state (must be at top level, before any conditional returns)
+  const [csvText, setCsvText] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ success?: number; errors?: string[] } | null>(null);
+
   // Check saved password
   useEffect(() => {
     const saved = localStorage.getItem('fairprice_admin_pw');
@@ -148,11 +153,6 @@ export default function AdminPage() {
   }
 
   // Admin Dashboard
-  // Bulk import state
-  const [csvText, setCsvText] = useState('');
-  const [importing, setImporting] = useState(false);
-  const [importResult, setImportResult] = useState<{ success?: number; errors?: string[] } | null>(null);
-
   const handleBulkImport = async () => {
     if (!csvText.trim()) return;
     setImporting(true);
