@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addSubmission } from '@/lib/pricing';
-import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
 import { categories } from '@/data/categories';
 
 /**
@@ -57,6 +57,9 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    // Use service role client to bypass RLS for user operations
+    const supabase = getServiceSupabase();
 
     // Add submission to database
     const newSubmission = await addSubmission({

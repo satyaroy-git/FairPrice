@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
 
 /**
  * GET /api/user?email=xxx — Look up user by email, return their points and tier
@@ -11,16 +11,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
   }
 
+  const supabase = getServiceSupabase();
   const normalizedEmail = email.toLowerCase().trim();
 
   const { data: user, error } = await supabase
     .from('users')
     .select('*')
     .eq('email', normalizedEmail)
-    .single();
+    .maybeSingle();
 
   if (error || !user) {
-    // User doesn't exist yet
     return NextResponse.json({
       exists: false,
       email: normalizedEmail,
@@ -52,14 +52,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
     }
 
+    const supabase = getServiceSupabase();
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Try to find existing user
     const { data: existingUser } = await supabase
       .from('users')
       .select('*')
       .eq('email', normalizedEmail)
-      .single();
+      .maybeSingle();
 
     if (existingUser) {
       return NextResponse.json({
@@ -68,7 +68,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create new user
     const { data: newUser, error } = await supabase
       .from('users')
       .insert({ email: normalizedEmail })
