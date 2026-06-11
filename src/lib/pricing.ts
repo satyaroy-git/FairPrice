@@ -2,6 +2,7 @@ import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, 
 import { detectCurrency } from './currency';
 import { supabase } from './supabase';
 import { categories } from '@/data/categories';
+import { submissions as localSubmissions } from '@/data/submissions';
 
 interface DbSubmission {
   id: string;
@@ -194,7 +195,33 @@ export async function lookupPrice(
     console.error('Supabase query error:', error);
   }
 
-  const submissions = (filteredSubmissions || []) as DbSubmission[];
+  let submissions = (filteredSubmissions || []) as DbSubmission[];
+
+  // Fallback to local seed data if Supabase returned no results
+  // (e.g., env vars not configured, DB empty, or network issue)
+  if (submissions.length === 0) {
+    const localFiltered = localSubmissions.filter(s => {
+      const matchesService = s.serviceType.toLowerCase().includes(normalizedService) ||
+        normalizedService.includes(s.serviceType.toLowerCase());
+      const matchesZip = s.zipCode.startsWith(prefix);
+      const matchesCategory = categoryId ? s.categoryId === categoryId : true;
+      return matchesService && matchesZip && matchesCategory;
+    });
+
+    submissions = localFiltered.map(s => ({
+      id: s.id,
+      service_type: s.serviceType,
+      category_id: s.categoryId,
+      zip_code: s.zipCode,
+      price_paid: s.pricePaid,
+      units: null,
+      unit_type: null,
+      company_name: s.companyName || null,
+      job_description: s.jobDescription || null,
+      submitted_at: s.submittedAt,
+      trust_points: s.trustPoints,
+    }));
+  }
 
   const priceRange = calculatePriceRange(submissions, userQuote);
   const breakdown = generateBreakdown(submissions);
@@ -312,7 +339,13 @@ export async function searchServices(query: string): Promise<string[]> {
     .ilike('service_type', `%${normalizedQuery}%`)
     .limit(20);
 
-  if (error || !data) return [];
+  if (error || !data || data.length === 0) {
+    // Fallback to local seed data
+    const localMatches = localSubmissions
+      .filter(s => s.serviceType.toLowerCase().includes(normalizedQuery))
+      .map(s => s.serviceType);
+    return Array.from(new Set(localMatches));
+  }
 
   // Deduplicate
   return Array.from(new Set(data.map(d => d.service_type)));
