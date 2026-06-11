@@ -88,9 +88,10 @@ function LookupContent() {
   const fetchResults = async (service: string, zip: string, quote?: number, units?: number) => {
     // Check search limits
     const currentCount = parseInt(localStorage.getItem('fairprice_search_count') || '0');
-    const maxSearches = !userTier ? 10 : (points < 50 ? 20 : 999);
+    const currentPoints = userTier?.trust_points || 0;
+    const maxSearches = !userTier ? 10 : (currentPoints < 50 ? 20 : 999);
 
-    if (currentCount >= maxSearches && points < 50) {
+    if (currentCount >= maxSearches && currentPoints < 50) {
       setSearchLimitReached(true);
       setLoading(false);
       return;
@@ -107,8 +108,12 @@ function LookupContent() {
       if (quote) params.set('quote', String(quote));
       if (units) params.set('units', String(units));
       const response = await fetch(`/api/lookup?${params.toString()}`);
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned an unexpected response. Please try again.');
+      }
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (!response.ok) throw new Error(data.error || 'Failed to look up prices');
       setResult(data);
 
       // Increment search count
