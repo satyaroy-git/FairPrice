@@ -6,7 +6,7 @@ import { submissions } from '@/data/submissions';
  */
 function getNearbyZips(zipCode: string): string[] {
   const prefix = zipCode.substring(0, 3);
-  const allZips = [...new Set(submissions.map(s => s.zipCode))];
+  const allZips = Array.from(new Set(submissions.map(s => s.zipCode)));
   return allZips.filter(z => z.startsWith(prefix));
 }
 
@@ -155,7 +155,7 @@ export function lookupPrice(
  */
 export function searchServices(query: string): string[] {
   const normalizedQuery = query.toLowerCase().trim();
-  const allServices = [...new Set(submissions.map(s => s.serviceType))];
+  const allServices = Array.from(new Set(submissions.map(s => s.serviceType)));
 
   if (!normalizedQuery) return allServices;
 
