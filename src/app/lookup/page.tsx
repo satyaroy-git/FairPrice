@@ -33,6 +33,10 @@ function LookupContent() {
       const params = new URLSearchParams({ service, zip });
       if (quote) params.set('quote', String(quote));
       const response = await fetch(`/api/lookup?${params.toString()}`);
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned an unexpected response. Please try again.');
+      }
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
       setResult(data);
