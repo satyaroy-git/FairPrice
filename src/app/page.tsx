@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/SearchBar';
 import CategoryCard from '@/components/CategoryCard';
+import AdSense, { MultiplexAd } from '@/components/AdSense';
 import { categories } from '@/data/categories';
 
 export default function HomePage() {
@@ -93,6 +94,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Ad placement - between categories and stats */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AdSense adSlot="HOME_BETWEEN_SECTIONS" adFormat="horizontal" />
+      </div>
+
       {/* Stats Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,6 +161,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Bottom multiplex ad - recommended content style */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <MultiplexAd adSlot="HOME_BOTTOM_MULTIPLEX" />
+      </div>
     </div>
   );
 }

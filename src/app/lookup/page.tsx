@@ -8,6 +8,7 @@ import PriceRangeBar from '@/components/PriceRangeBar';
 import ContractorTable from '@/components/ContractorTable';
 import WhatsAppShare from '@/components/WhatsAppShare';
 import PriceHistoryChart from '@/components/PriceHistoryChart';
+import AdSense, { InArticleAd } from '@/components/AdSense';
 import { LookupResult } from '@/lib/types';
 
 interface UserTier {
@@ -385,6 +386,9 @@ function LookupContent() {
                 </GatedSection>
               )}
 
+              {/* In-article ad between contractors and price history */}
+              <InArticleAd adSlot="LOOKUP_BETWEEN_RESULTS" />
+
               {/* Price History Chart */}
               {result.priceHistory && result.priceHistory.length >= 2 && (
                 <PriceHistoryChart
@@ -393,6 +397,9 @@ function LookupContent() {
                   serviceType={result.serviceType}
                 />
               )}
+
+              {/* Ad after price history, before quotes CTA */}
+              <AdSense adSlot="LOOKUP_AFTER_CHART" adFormat="rectangle" />
 
               {/* Get 3 Quotes CTA - Always visible */}
               <div className="card bg-gradient-to-r from-blue-50 to-blue-50 border-blue-200">
