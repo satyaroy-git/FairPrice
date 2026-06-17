@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
 
 /**
  * POST /api/leads — Store a new lead and send notification email
@@ -72,7 +73,8 @@ export async function POST(request: NextRequest) {
 
       // Update lead status
       if (emailSent) {
-        await supabase
+        const serviceClient = getServiceSupabase();
+        await serviceClient
           .from('leads')
           .update({ notification_sent: true, status: 'notified' })
           .eq('id', lead.id);
@@ -198,7 +200,8 @@ The FairPrice Team
   // Fallback: Store email content in a notifications queue table for manual sending
   // This ensures no leads are lost even without email integration
   try {
-    await supabase
+    const serviceClient = getServiceSupabase();
+    await serviceClient
       .from('leads')
       .update({
         status: 'pending_email',
@@ -224,7 +227,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Email parameter required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const serviceClient = getServiceSupabase();
+  const { data, error } = await serviceClient
     .from('leads')
     .select('*')
     .eq('email', email.toLowerCase().trim())
