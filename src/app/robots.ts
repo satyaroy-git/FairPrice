@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin'],
       },
     ],
-    sitemap: 'https://fairprice.app/sitemap.xml',
+    sitemap: 'https://getfairprice.com/sitemap.xml',
   };
 }

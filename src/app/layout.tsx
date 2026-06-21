@@ -7,11 +7,21 @@ export const metadata: Metadata = {
   description: 'Crowd-sourced price intelligence for local services. Get fair price ranges for plumbing, electrical, auto repair, and more in your area.',
   keywords: 'fair price, price comparison, home services, plumbing cost, electrical cost, contractor pricing, service quotes',
   authors: [{ name: 'FairPrice' }],
+  metadataBase: new URL('https://getfairprice.com'),
   openGraph: {
     title: 'FairPrice - Know What You Should Really Pay',
     description: 'Crowd-sourced price intelligence for local services. Stop guessing if you\'re being ripped off.',
     type: 'website',
     siteName: 'FairPrice',
+    url: 'https://getfairprice.com',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FairPrice - Know What You Should Really Pay',
+    description: 'Crowd-sourced price intelligence for local services.',
+  },
+  alternates: {
+    canonical: 'https://getfairprice.com',
   },
 };
 

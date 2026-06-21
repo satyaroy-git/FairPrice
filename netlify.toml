@@ -4,3 +4,36 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Redirect www to bare domain
+[[redirects]]
+  from = "https://www.getfairprice.com/*"
+  to = "https://getfairprice.com/:splat"
+  status = 301
+  force = true
+
+# Force HTTPS
+[[redirects]]
+  from = "http://getfairprice.com/*"
+  to = "https://getfairprice.com/:splat"
+  status = 301
+  force = true
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
