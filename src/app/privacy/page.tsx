@@ -90,7 +90,7 @@ export default function PrivacyPolicyPage() {
             <li>Withdraw consent for data processing.</li>
           </ul>
           <p className="text-gray-700 leading-relaxed mt-4">
-            To exercise any of these rights, please contact us at <a href="mailto:privacy@fairprice.app" className="text-primary-600 hover:underline">privacy@fairprice.app</a>.
+            To exercise any of these rights, please contact us at <a href="mailto:satya.bit123@gmail.com" className="text-primary-600 hover:underline">satya.bit123@gmail.com</a>.
           </p>
         </section>
 
@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
             If you have questions about this Privacy Policy, please contact us at:
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mt-3">
-            <p className="text-gray-700">Email: <a href="mailto:privacy@fairprice.app" className="text-primary-600 hover:underline">privacy@fairprice.app</a></p>
+            <p className="text-gray-700">Email: <a href="mailto:satya.bit123@gmail.com" className="text-primary-600 hover:underline">satya.bit123@gmail.com</a></p>
             <p className="text-gray-700">Website: <a href="/contact" className="text-primary-600 hover:underline">Contact Form</a></p>
           </div>
         </section>

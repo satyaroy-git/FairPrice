@@ -176,7 +176,7 @@ The FairPrice Team
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: process.env.EMAIL_FROM || 'FairPrice <quotes@fairprice.app>',
+          from: process.env.EMAIL_FROM || 'FairPrice <satya.bit123@gmail.com>',
           to: [to],
           subject: `Your ${serviceType} Quote Details — FairPrice`,
           text: emailBody,

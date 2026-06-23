@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       type: 'website',
-      url: `https://fairprice.app/prices/${params.category}/${params.city}`,
+      url: `https://getfairprice.in/prices/${params.category}/${params.city}`,
     },
     twitter: {
       card: 'summary_large_image',

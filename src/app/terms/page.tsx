@@ -140,7 +140,7 @@ export default function TermsOfServicePage() {
             For questions about these Terms of Service, contact us at:
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mt-3">
-            <p className="text-gray-700">Email: <a href="mailto:legal@fairprice.app" className="text-primary-600 hover:underline">legal@fairprice.app</a></p>
+            <p className="text-gray-700">Email: <a href="mailto:satya.bit123@gmail.com" className="text-primary-600 hover:underline">satya.bit123@gmail.com</a></p>
             <p className="text-gray-700">Website: <a href="/contact" className="text-primary-600 hover:underline">Contact Form</a></p>
           </div>
         </section>

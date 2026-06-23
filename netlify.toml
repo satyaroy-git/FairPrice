@@ -7,15 +7,15 @@
 
 # Redirect www to bare domain
 [[redirects]]
-  from = "https://www.getfairprice.com/*"
-  to = "https://getfairprice.com/:splat"
+  from = "https://www.getfairprice.in/*"
+  to = "https://getfairprice.in/:splat"
   status = 301
   force = true
 
 # Force HTTPS
 [[redirects]]
-  from = "http://getfairprice.com/*"
-  to = "https://getfairprice.com/:splat"
+  from = "http://getfairprice.in/*"
+  to = "https://getfairprice.in/:splat"
   status = 301
   force = true
 

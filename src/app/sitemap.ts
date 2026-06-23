@@ -3,7 +3,7 @@ import { categories } from '@/data/categories';
 import { cities } from '@/data/cities';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://getfairprice.com';
+  const baseUrl = 'https://getfairprice.in';
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

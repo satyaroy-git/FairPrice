@@ -137,8 +137,8 @@ export default function ContactPage() {
                 <span className="text-xl">📧</span>
                 <div>
                   <p className="text-sm font-medium text-gray-900">Email</p>
-                  <a href="mailto:hello@fairprice.app" className="text-sm text-primary-600 hover:underline">
-                    hello@fairprice.app
+                  <a href="mailto:satya.bit123@gmail.com" className="text-sm text-primary-600 hover:underline">
+                    satya.bit123@gmail.com
                   </a>
                 </div>
               </div>
@@ -174,8 +174,8 @@ export default function ContactPage() {
             <p className="text-sm text-gray-700 mb-4">
               Interested in advertising on FairPrice? We reach thousands of homeowners actively seeking services.
             </p>
-            <a href="mailto:ads@fairprice.app" className="text-sm text-amber-700 font-medium hover:underline">
-              ads@fairprice.app →
+            <a href="mailto:satya.bit123@gmail.com" className="text-sm text-amber-700 font-medium hover:underline">
+              satya.bit123@gmail.com →
             </a>
           </div>
         </div>

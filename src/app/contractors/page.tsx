@@ -291,7 +291,7 @@ export default function ContractorsPage() {
             </div>
             <div className="card">
               <h3 className="font-medium text-gray-900">Can I pause receiving leads?</h3>
-              <p className="text-sm text-gray-600 mt-1">Yes, you can pause or deactivate your profile anytime. Contact us at support@fairprice.app.</p>
+              <p className="text-sm text-gray-600 mt-1">Yes, you can pause or deactivate your profile anytime. Contact us at satya.bit123@gmail.com.</p>
             </div>
           </div>
         </section>

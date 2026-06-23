@@ -169,7 +169,7 @@ export default function AboutPage() {
             Have questions, feedback, or partnership inquiries? We&apos;d love to hear from you.
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mt-3">
-            <p className="text-gray-700">Email: <a href="mailto:hello@fairprice.app" className="text-primary-600 hover:underline">hello@fairprice.app</a></p>
+            <p className="text-gray-700">Email: <a href="mailto:satya.bit123@gmail.com" className="text-primary-600 hover:underline">satya.bit123@gmail.com</a></p>
             <p className="text-gray-700">Contact Form: <Link href="/contact" className="text-primary-600 hover:underline">Get in Touch</Link></p>
           </div>
         </section>
