@@ -8,6 +8,7 @@ import PriceRangeBar from '@/components/PriceRangeBar';
 import ContractorTable from '@/components/ContractorTable';
 import WhatsAppShare from '@/components/WhatsAppShare';
 import PriceHistoryChart from '@/components/PriceHistoryChart';
+import FreshnessBadge from '@/components/FreshnessBadge';
 import AdSense, { InArticleAd } from '@/components/AdSense';
 import { LookupResult } from '@/lib/types';
 
@@ -292,6 +293,11 @@ function LookupContent() {
                   />
                 </div>
               </div>
+
+              {/* Data Freshness Badge */}
+              {result.dataFreshness && (
+                <FreshnessBadge dataFreshness={result.dataFreshness} />
+              )}
 
               {/* Email gate - show if user not identified AND past free searches */}
               {!userTier && !isFreeSearch && (

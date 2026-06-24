@@ -1,4 +1,4 @@
-import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing, PriceHistoryPoint } from './types';
+import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing, PriceHistoryPoint, DataFreshness } from './types';
 import { detectCurrency } from './currency';
 import { supabase } from './supabase';
 import { categories } from '@/data/categories';
@@ -26,7 +26,58 @@ function getZipPrefix(zipCode: string): string {
 }
 
 /**
- * Calculate price range from submissions
+ * Calculate time-decay weight for a submission.
+ * - Submissions within 3 months: weight 1.0 (full weight)
+ * - 3-6 months: weight 0.8
+ * - 6-9 months: weight 0.5
+ * - 9-12 months: weight 0.3
+ * - Older than 12 months: weight 0.1 (stale, minimal influence)
+ */
+function getDecayWeight(submittedAt: string): number {
+  const now = new Date();
+  const submitted = new Date(submittedAt);
+  const monthsAgo = (now.getTime() - submitted.getTime()) / (1000 * 60 * 60 * 24 * 30);
+
+  if (monthsAgo <= 3) return 1.0;
+  if (monthsAgo <= 6) return 0.8;
+  if (monthsAgo <= 9) return 0.5;
+  if (monthsAgo <= 12) return 0.3;
+  return 0.1; // stale data
+}
+
+/**
+ * Determine staleness status of data
+ * Returns: 'fresh' (< 3 months), 'recent' (3-6), 'aging' (6-12), 'stale' (> 12)
+ */
+function getDataFreshnessStatus(submissions: DbSubmission[]): 'fresh' | 'recent' | 'aging' | 'stale' {
+  if (submissions.length === 0) return 'stale';
+
+  const now = new Date();
+  const newestSubmission = submissions.reduce((newest, s) => {
+    const d = new Date(s.submitted_at);
+    return d > newest ? d : newest;
+  }, new Date(0));
+
+  const monthsOld = (now.getTime() - newestSubmission.getTime()) / (1000 * 60 * 60 * 24 * 30);
+
+  if (monthsOld <= 3) return 'fresh';
+  if (monthsOld <= 6) return 'recent';
+  if (monthsOld <= 12) return 'aging';
+  return 'stale';
+}
+
+/**
+ * Calculate the most recent submission date
+ */
+function getLastUpdatedDate(submissions: DbSubmission[]): string | undefined {
+  if (submissions.length === 0) return undefined;
+  const dates = submissions.map(s => new Date(s.submitted_at));
+  const newest = new Date(Math.max(...dates.map(d => d.getTime())));
+  return newest.toISOString();
+}
+
+/**
+ * Calculate price range from submissions using time-decay weighted averages
  */
 function calculatePriceRange(filteredSubmissions: DbSubmission[], userQuote?: number): PriceRange {
   if (filteredSubmissions.length === 0) {
@@ -36,7 +87,16 @@ function calculatePriceRange(filteredSubmissions: DbSubmission[], userQuote?: nu
   const prices = filteredSubmissions.map(s => Number(s.price_paid)).sort((a, b) => a - b);
   const low = prices[0];
   const high = prices[prices.length - 1];
-  const average = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+
+  // Weighted average using time-decay
+  let totalWeight = 0;
+  let weightedSum = 0;
+  filteredSubmissions.forEach(s => {
+    const weight = getDecayWeight(s.submitted_at);
+    weightedSum += Number(s.price_paid) * weight;
+    totalWeight += weight;
+  });
+  const average = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
 
   // Calculate freshness (% within 6 months)
   const sixMonthsAgo = new Date();
@@ -304,6 +364,19 @@ export async function lookupPrice(
   // Generate price history (group by month)
   const priceHistory = generatePriceHistory(submissions);
 
+  // Calculate data freshness metadata
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+  const staleCount = submissions.filter(s => new Date(s.submitted_at) < twelveMonthsAgo).length;
+
+  const dataFreshness: DataFreshness = {
+    status: getDataFreshnessStatus(submissions),
+    lastUpdated: getLastUpdatedDate(submissions),
+    freshness: priceRange.freshness,
+    totalSubmissions: submissions.length,
+    staleCount,
+  };
+
   return {
     serviceType: normalizedService,
     zipCode,
@@ -313,6 +386,7 @@ export async function lookupPrice(
     priceHistory,
     breakdown,
     contractors,
+    dataFreshness,
     recentSubmissions: submissions.slice(0, 5).map(s => ({
       id: s.id,
       serviceType: s.service_type,
