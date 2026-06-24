@@ -289,8 +289,14 @@ export async function lookupPrice(
   const currency = detectCurrency(zipCode);
 
   // Calculate unit pricing if units provided
+  // Skip unit-based multiplication for categories where units are informational only
+  // (e.g., house rent — sq ft is context, not a price multiplier)
+  const skipUnitMultiplication = ['house-rent'];
+  const matchedCategoryId = categoryId || submissions[0]?.category_id || '';
+  const shouldSkipUnits = skipUnitMultiplication.includes(matchedCategoryId);
+
   let unitPricing: UnitPricing | undefined;
-  if (units && units > 0 && priceRange.submissionCount > 0) {
+  if (units && units > 0 && priceRange.submissionCount > 0 && !shouldSkipUnits) {
     let unitLabel = 'units';
     for (const cat of categories) {
       for (const sub of cat.subcategories) {
