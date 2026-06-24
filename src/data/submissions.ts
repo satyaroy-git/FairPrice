@@ -223,4 +223,51 @@ export const submissions: PriceSubmission[] = [
   // Interior - US
   { id: '145', serviceType: 'tile installation', categoryId: 'interior-design', zipCode: '10001', pricePaid: 2500, companyName: 'NYC Tile Pros', jobDescription: 'Bathroom floor, 60 sqft, porcelain', submittedAt: '2026-05-16', trustPoints: 10 },
   { id: '146', serviceType: 'kitchen countertop', categoryId: 'interior-design', zipCode: '10001', pricePaid: 4500, jobDescription: 'Quartz countertop, 30 sqft, with installation', submittedAt: '2026-04-20', trustPoints: 10 },
+
+  // ===== HOUSE RENT =====
+  // 1 BHK - India
+  { id: '147', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '400001', pricePaid: 25000, jobDescription: '1BHK, 450 sqft, semi-furnished, Colaba', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '148', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '400001', pricePaid: 30000, companyName: 'NoBroker', jobDescription: '1BHK, 500 sqft, fully furnished, Marine Lines', submittedAt: '2026-05-15', trustPoints: 10 },
+  { id: '149', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '400072', pricePaid: 18000, jobDescription: '1BHK, 400 sqft, unfurnished, Andheri East', submittedAt: '2026-05-20', trustPoints: 10 },
+  { id: '150', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '110001', pricePaid: 22000, jobDescription: '1BHK, 500 sqft, semi-furnished, Connaught Place area', submittedAt: '2026-06-05', trustPoints: 10 },
+  { id: '151', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '110092', pricePaid: 12000, jobDescription: '1BHK, 450 sqft, unfurnished, Shahdara', submittedAt: '2026-05-25', trustPoints: 10 },
+  { id: '152', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '560001', pricePaid: 18000, companyName: 'MagicBricks', jobDescription: '1BHK, 550 sqft, semi-furnished, MG Road area', submittedAt: '2026-06-02', trustPoints: 10 },
+  { id: '153', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '560034', pricePaid: 15000, jobDescription: '1BHK, 500 sqft, unfurnished, Electronic City', submittedAt: '2026-05-18', trustPoints: 10 },
+
+  // 2 BHK - India
+  { id: '154', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '400001', pricePaid: 55000, companyName: 'Housing.com', jobDescription: '2BHK, 800 sqft, fully furnished, Lower Parel', submittedAt: '2026-06-03', trustPoints: 10 },
+  { id: '155', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '400072', pricePaid: 32000, jobDescription: '2BHK, 750 sqft, semi-furnished, Andheri West', submittedAt: '2026-05-22', trustPoints: 10 },
+  { id: '156', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '110001', pricePaid: 35000, jobDescription: '2BHK, 900 sqft, semi-furnished, Karol Bagh', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '157', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '110092', pricePaid: 18000, jobDescription: '2BHK, 800 sqft, unfurnished, Laxmi Nagar', submittedAt: '2026-05-28', trustPoints: 10 },
+  { id: '158', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '560001', pricePaid: 30000, companyName: 'NoBroker', jobDescription: '2BHK, 1000 sqft, semi-furnished, Koramangala', submittedAt: '2026-06-04', trustPoints: 10 },
+  { id: '159', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '560034', pricePaid: 22000, jobDescription: '2BHK, 900 sqft, unfurnished, Whitefield', submittedAt: '2026-05-20', trustPoints: 10 },
+  { id: '160', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '600001', pricePaid: 25000, jobDescription: '2BHK, 850 sqft, semi-furnished, T Nagar, Chennai', submittedAt: '2026-05-30', trustPoints: 10 },
+
+  // 3 BHK - India
+  { id: '161', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '400001', pricePaid: 95000, companyName: 'Housing.com', jobDescription: '3BHK, 1400 sqft, fully furnished, Bandra West', submittedAt: '2026-06-02', trustPoints: 10 },
+  { id: '162', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '400072', pricePaid: 50000, jobDescription: '3BHK, 1100 sqft, semi-furnished, Powai', submittedAt: '2026-05-25', trustPoints: 10 },
+  { id: '163', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '110001', pricePaid: 60000, jobDescription: '3BHK, 1500 sqft, semi-furnished, South Delhi', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '164', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '560001', pricePaid: 45000, companyName: 'MagicBricks', jobDescription: '3BHK, 1600 sqft, semi-furnished, Indiranagar', submittedAt: '2026-05-28', trustPoints: 10 },
+  { id: '165', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '411001', pricePaid: 35000, jobDescription: '3BHK, 1300 sqft, semi-furnished, Shivaji Nagar, Pune', submittedAt: '2026-05-22', trustPoints: 10 },
+
+  // PG / Shared - India
+  { id: '166', serviceType: 'pg rent', categoryId: 'house-rent', zipCode: '560034', pricePaid: 8000, companyName: 'Zolo', jobDescription: 'Single sharing, AC, food included, Whitefield', submittedAt: '2026-06-05', trustPoints: 10 },
+  { id: '167', serviceType: 'pg rent', categoryId: 'house-rent', zipCode: '560034', pricePaid: 12000, companyName: 'Colive', jobDescription: 'Single room, AC, attached bath, HSR Layout', submittedAt: '2026-05-30', trustPoints: 10 },
+  { id: '168', serviceType: 'pg rent', categoryId: 'house-rent', zipCode: '400072', pricePaid: 15000, jobDescription: 'Single sharing PG, food, WiFi, Andheri', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '169', serviceType: 'pg rent', categoryId: 'house-rent', zipCode: '110092', pricePaid: 7000, jobDescription: 'Double sharing PG, basic amenities, Noida Sector 62', submittedAt: '2026-05-20', trustPoints: 10 },
+  { id: '170', serviceType: 'shared room rent', categoryId: 'house-rent', zipCode: '411001', pricePaid: 6500, jobDescription: 'Triple sharing, Hinjewadi, Pune', submittedAt: '2026-05-18', trustPoints: 10 },
+
+  // House Rent - US
+  { id: '171', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '10001', pricePaid: 3200, jobDescription: '1BR apartment, 550 sqft, Manhattan, no doorman', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '172', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '10001', pricePaid: 3800, companyName: 'StreetEasy', jobDescription: '1BR, 600 sqft, Midtown, elevator building', submittedAt: '2026-05-20', trustPoints: 10 },
+  { id: '173', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '10001', pricePaid: 4500, jobDescription: '2BR apartment, 850 sqft, Upper East Side', submittedAt: '2026-05-28', trustPoints: 10 },
+  { id: '174', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '94102', pricePaid: 3800, companyName: 'Zillow', jobDescription: '2BR, 900 sqft, SOMA, San Francisco', submittedAt: '2026-06-03', trustPoints: 10 },
+  { id: '175', serviceType: '1bhk rent', categoryId: 'house-rent', zipCode: '60601', pricePaid: 2100, jobDescription: '1BR, 700 sqft, The Loop, Chicago', submittedAt: '2026-05-25', trustPoints: 10 },
+  { id: '176', serviceType: '2bhk rent', categoryId: 'house-rent', zipCode: '60601', pricePaid: 2800, jobDescription: '2BR, 1000 sqft, River North, Chicago', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '177', serviceType: '3bhk rent', categoryId: 'house-rent', zipCode: '78701', pricePaid: 3200, companyName: 'Apartments.com', jobDescription: '3BR house, 1500 sqft, Austin TX', submittedAt: '2026-05-22', trustPoints: 10 },
+
+  // Commercial / Office - India
+  { id: '178', serviceType: 'office rent', categoryId: 'house-rent', zipCode: '400001', pricePaid: 85000, jobDescription: '500 sqft, furnished office, BKC, Mumbai', submittedAt: '2026-06-01', trustPoints: 10 },
+  { id: '179', serviceType: 'shop rent', categoryId: 'house-rent', zipCode: '560001', pricePaid: 45000, jobDescription: '300 sqft, ground floor shop, MG Road, Bangalore', submittedAt: '2026-05-28', trustPoints: 10 },
+  { id: '180', serviceType: 'coworking space rent', categoryId: 'house-rent', zipCode: '110001', pricePaid: 8000, companyName: 'WeWork', jobDescription: 'Hot desk, per month, Connaught Place', submittedAt: '2026-06-05', trustPoints: 10 },
 ];
