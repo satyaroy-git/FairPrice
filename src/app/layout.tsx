@@ -55,11 +55,11 @@ export default function RootLayout({
                 <a href="/lookup" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Lookup
                 </a>
-                <a href="/about" className="hidden sm:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
-                  About
-                </a>
-                <a href="/contractors" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                <a href="/contractors" className="hidden sm:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   For Contractors
+                </a>
+                <a href="/about" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                  About
                 </a>
                 <a href="/contact" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Contact
