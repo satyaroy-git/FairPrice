@@ -58,6 +58,14 @@ export interface PriceHistoryPoint {
   count: number;
 }
 
+export interface DataFreshness {
+  status: 'fresh' | 'recent' | 'aging' | 'stale';
+  lastUpdated?: string; // ISO date of most recent submission
+  freshness: number; // % of submissions within 6 months
+  totalSubmissions: number;
+  staleCount: number; // submissions older than 12 months
+}
+
 export interface LookupResult {
   serviceType: string;
   zipCode: string;
@@ -68,6 +76,7 @@ export interface LookupResult {
   breakdown: BreakdownItem[];
   contractors: ContractorScore[];
   recentSubmissions: PriceSubmission[];
+  dataFreshness: DataFreshness;
 }
 
 export interface BreakdownItem {

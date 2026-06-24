@@ -84,6 +84,21 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if email fails - lead is still stored
     }
 
+    // Also track this lookup for follow-up email (2 weeks later)
+    try {
+      await supabase
+        .from('lookup_followups')
+        .insert({
+          email: email.toLowerCase().trim(),
+          service_type: serviceType.toLowerCase().trim(),
+          category_id: categoryId || null,
+          zip_code: zipCode,
+          quote_amount: priceRangeAvg || null,
+        });
+    } catch {
+      // Non-critical — don't fail the main request
+    }
+
     return NextResponse.json({
       success: true,
       leadId: lead.id,
