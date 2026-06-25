@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#e8eddf"/>
+  <!-- "FairPrice" text sized to fit inside circle -->
+  <text x="256" y="280" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="700" text-anchor="middle">
+    <tspan fill="#1a5c5c">Fair</tspan><tspan fill="#e87530">Price</tspan>
+  </text>
+</svg>
