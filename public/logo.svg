@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="230" fill="#e8eddf"/>
+  <!-- "Fair" text in teal -->
+  <text x="108" y="290" font-family="Arial, Helvetica, sans-serif" font-size="110" font-weight="700" fill="#1a5c5c" letter-spacing="-2">Fair</text>
+  <!-- "Price" text in orange -->
+  <text x="280" y="290" font-family="Arial, Helvetica, sans-serif" font-size="110" font-weight="700" fill="#e87530" letter-spacing="-2">Price</text>
+</svg>
