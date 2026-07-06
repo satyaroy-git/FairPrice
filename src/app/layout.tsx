@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'FairPrice',
     url: 'https://getfairprice.in',
+    images: [{ url: '/logo.svg', width: 512, height: 512, alt: 'FairPrice Logo' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -34,7 +35,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#2563eb" />
+        <meta name="theme-color" content="#1a5c5c" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         {/* Google AdSense Script - Replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID */}
         <Script
           async
@@ -48,8 +50,10 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 sm:h-16">
               <a href="/" className="flex items-center space-x-1.5 sm:space-x-2">
-                <span className="text-xl sm:text-2xl">💰</span>
-                <span className="text-lg sm:text-xl font-bold text-blue-700">FairPrice</span>
+                <img src="/logo.svg" alt="FairPrice" className="h-8 sm:h-10 w-8 sm:w-10 rounded-full" />
+                <span className="text-lg sm:text-xl font-bold">
+                  <span className="text-[#1a5c5c]">Fair</span><span className="text-[#e87530]">Price</span>
+                </span>
               </a>
               <div className="flex items-center space-x-2 sm:space-x-5">
                 <a href="/lookup" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 font-medium transition-colors">
@@ -77,7 +81,7 @@ export default function RootLayout({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
               <div>
                 <div className="flex items-center space-x-2 mb-4">
-                  <span className="text-2xl">💰</span>
+                  <img src="/logo.svg" alt="FairPrice" className="h-8 w-8 rounded-full" />
                   <span className="text-lg font-bold text-white">FairPrice</span>
                 </div>
                 <p className="text-sm">Crowd-sourced price intelligence. Know what you should really pay for local services.</p>

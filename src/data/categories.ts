@@ -187,6 +187,20 @@ export const categories: CategoryWithSubs[] = [
     ],
   },
   {
+    id: 'house-rent',
+    name: 'House Rent',
+    icon: '🏘️',
+    description: 'Monthly rent for 1BHK, 2BHK, 3BHK, PG, flat, villa',
+    subcategories: [
+      { id: 'rent-1bhk', name: '1 BHK', serviceTypes: ['1bhk rent', '1bhk flat rent', '1 bedroom rent', 'studio apartment rent'], unitConfig: { label: 'Carpet Area (sq ft)', unit: 'sq ft', placeholder: 'e.g., 500', options: [300, 400, 500, 600, 700] } },
+      { id: 'rent-2bhk', name: '2 BHK', serviceTypes: ['2bhk rent', '2bhk flat rent', '2 bedroom rent', '2bhk apartment rent'], unitConfig: { label: 'Carpet Area (sq ft)', unit: 'sq ft', placeholder: 'e.g., 800', options: [600, 700, 800, 900, 1000, 1200] } },
+      { id: 'rent-3bhk', name: '3 BHK', serviceTypes: ['3bhk rent', '3bhk flat rent', '3 bedroom rent', '3bhk apartment rent'], unitConfig: { label: 'Carpet Area (sq ft)', unit: 'sq ft', placeholder: 'e.g., 1200', options: [900, 1000, 1200, 1400, 1600, 2000] } },
+      { id: 'rent-4bhk-villa', name: '4 BHK / Villa', serviceTypes: ['4bhk rent', 'villa rent', 'independent house rent', 'bungalow rent', 'duplex rent'], unitConfig: { label: 'Carpet Area (sq ft)', unit: 'sq ft', placeholder: 'e.g., 2000', options: [1500, 2000, 2500, 3000, 4000] } },
+      { id: 'rent-pg', name: 'PG / Shared', serviceTypes: ['pg rent', 'paying guest', 'shared room rent', 'hostel rent', 'co-living rent'], unitConfig: { label: 'Occupancy', unit: 'persons/room', placeholder: 'e.g., 1', options: [1, 2, 3, 4] } },
+      { id: 'rent-commercial', name: 'Commercial / Office', serviceTypes: ['office rent', 'shop rent', 'commercial space rent', 'coworking space rent', 'warehouse rent'], unitConfig: { label: 'Area (sq ft)', unit: 'sq ft', placeholder: 'e.g., 500', options: [200, 500, 1000, 2000, 5000] } },
+    ],
+  },
+  {
     id: 'interior-design',
     name: 'Interior Design',
     icon: '🎨',
