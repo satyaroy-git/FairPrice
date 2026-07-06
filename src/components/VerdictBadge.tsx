@@ -1,14 +1,15 @@
 'use client';
 
-import { VerdictType } from '@/lib/types';
+import { VerdictType, CurrencyInfo } from '@/lib/types';
 
 interface VerdictBadgeProps {
   verdict: VerdictType;
   quote: number;
   average: number;
+  currency: CurrencyInfo;
 }
 
-export default function VerdictBadge({ verdict, quote, average }: VerdictBadgeProps) {
+export default function VerdictBadge({ verdict, quote, average, currency }: VerdictBadgeProps) {
   const config = {
     FAIR: {
       bg: 'bg-emerald-50',
@@ -40,13 +41,17 @@ export default function VerdictBadge({ verdict, quote, average }: VerdictBadgePr
   const diff = quote - average;
   const percentage = Math.round((diff / average) * 100);
 
+  const formatPrice = (amount: number) => {
+    return `${currency.symbol}${amount.toLocaleString(currency.locale)}`;
+  };
+
   return (
     <div className={`${c.bg} ${c.border} border-2 rounded-xl p-6 text-center`}>
       <div className="text-4xl mb-2">{c.icon}</div>
       <h3 className={`text-2xl font-bold ${c.text} mb-1`}>{c.label}</h3>
       <p className={`${c.text} text-sm mb-3`}>{c.description}</p>
       <div className="text-gray-600 text-sm">
-        Your quote: <span className="font-bold">${quote.toLocaleString()}</span>
+        Your quote: <span className="font-bold">{formatPrice(quote)}</span>
         {diff > 0 && (
           <span className="ml-2 text-red-600">(+{percentage}% above average)</span>
         )}

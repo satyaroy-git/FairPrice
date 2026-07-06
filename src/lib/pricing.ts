@@ -1,33 +1,108 @@
-import { PriceSubmission, PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType } from './types';
-import { submissions } from '@/data/submissions';
+import { PriceRange, LookupResult, BreakdownItem, ContractorScore, VerdictType, UnitPricing, PriceHistoryPoint, DataFreshness } from './types';
+import { detectCurrency } from './currency';
+import { supabase } from './supabase';
+import { categories } from '@/data/categories';
+import { submissions as localSubmissions } from '@/data/submissions';
 
-/**
- * Get nearby ZIP codes (simplified - uses first 3 digits for area matching)
- */
-function getNearbyZips(zipCode: string): string[] {
-  const prefix = zipCode.substring(0, 3);
-  const allZips = [...new Set(submissions.map(s => s.zipCode))];
-  return allZips.filter(z => z.startsWith(prefix));
+interface DbSubmission {
+  id: string;
+  service_type: string;
+  category_id: string;
+  zip_code: string;
+  price_paid: number;
+  units: number | null;
+  unit_type: string | null;
+  company_name: string | null;
+  job_description: string | null;
+  submitted_at: string;
+  trust_points: number;
 }
 
 /**
- * Calculate price range from submissions
+ * Get nearby ZIP/PIN codes prefix (first 3 digits for area matching)
  */
-function calculatePriceRange(filteredSubmissions: PriceSubmission[], userQuote?: number): PriceRange {
+function getZipPrefix(zipCode: string): string {
+  return zipCode.substring(0, 3);
+}
+
+/**
+ * Calculate time-decay weight for a submission.
+ * - Submissions within 3 months: weight 1.0 (full weight)
+ * - 3-6 months: weight 0.8
+ * - 6-9 months: weight 0.5
+ * - 9-12 months: weight 0.3
+ * - Older than 12 months: weight 0.1 (stale, minimal influence)
+ */
+function getDecayWeight(submittedAt: string): number {
+  const now = new Date();
+  const submitted = new Date(submittedAt);
+  const monthsAgo = (now.getTime() - submitted.getTime()) / (1000 * 60 * 60 * 24 * 30);
+
+  if (monthsAgo <= 3) return 1.0;
+  if (monthsAgo <= 6) return 0.8;
+  if (monthsAgo <= 9) return 0.5;
+  if (monthsAgo <= 12) return 0.3;
+  return 0.1; // stale data
+}
+
+/**
+ * Determine staleness status of data
+ * Returns: 'fresh' (< 3 months), 'recent' (3-6), 'aging' (6-12), 'stale' (> 12)
+ */
+function getDataFreshnessStatus(submissions: DbSubmission[]): 'fresh' | 'recent' | 'aging' | 'stale' {
+  if (submissions.length === 0) return 'stale';
+
+  const now = new Date();
+  const newestSubmission = submissions.reduce((newest, s) => {
+    const d = new Date(s.submitted_at);
+    return d > newest ? d : newest;
+  }, new Date(0));
+
+  const monthsOld = (now.getTime() - newestSubmission.getTime()) / (1000 * 60 * 60 * 24 * 30);
+
+  if (monthsOld <= 3) return 'fresh';
+  if (monthsOld <= 6) return 'recent';
+  if (monthsOld <= 12) return 'aging';
+  return 'stale';
+}
+
+/**
+ * Calculate the most recent submission date
+ */
+function getLastUpdatedDate(submissions: DbSubmission[]): string | undefined {
+  if (submissions.length === 0) return undefined;
+  const dates = submissions.map(s => new Date(s.submitted_at));
+  const newest = new Date(Math.max(...dates.map(d => d.getTime())));
+  return newest.toISOString();
+}
+
+/**
+ * Calculate price range from submissions using time-decay weighted averages
+ */
+function calculatePriceRange(filteredSubmissions: DbSubmission[], userQuote?: number): PriceRange {
   if (filteredSubmissions.length === 0) {
     return { low: 0, average: 0, high: 0, submissionCount: 0, freshness: 0 };
   }
 
-  const prices = filteredSubmissions.map(s => s.pricePaid).sort((a, b) => a - b);
+  const prices = filteredSubmissions.map(s => Number(s.price_paid)).sort((a, b) => a - b);
   const low = prices[0];
   const high = prices[prices.length - 1];
-  const average = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+
+  // Weighted average using time-decay
+  let totalWeight = 0;
+  let weightedSum = 0;
+  filteredSubmissions.forEach(s => {
+    const weight = getDecayWeight(s.submitted_at);
+    weightedSum += Number(s.price_paid) * weight;
+    totalWeight += weight;
+  });
+  const average = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
 
   // Calculate freshness (% within 6 months)
   const sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
   const recentCount = filteredSubmissions.filter(
-    s => new Date(s.submittedAt) >= sixMonthsAgo
+    s => new Date(s.submitted_at) >= sixMonthsAgo
   ).length;
   const freshness = Math.round((recentCount / filteredSubmissions.length) * 100);
 
@@ -59,12 +134,11 @@ function calculatePriceRange(filteredSubmissions: PriceSubmission[], userQuote?:
 /**
  * Generate breakdown items from submissions
  */
-function generateBreakdown(filteredSubmissions: PriceSubmission[]): BreakdownItem[] {
-  const descriptionGroups: Record<string, PriceSubmission[]> = {};
+function generateBreakdown(filteredSubmissions: DbSubmission[]): BreakdownItem[] {
+  const descriptionGroups: Record<string, DbSubmission[]> = {};
 
   filteredSubmissions.forEach(s => {
-    const key = s.jobDescription?.toLowerCase() || 'standard';
-    // Group by first few words for simplicity
+    const key = (s.job_description || 'standard').toLowerCase();
     const groupKey = key.split(',')[0].trim().substring(0, 30);
     if (!descriptionGroups[groupKey]) {
       descriptionGroups[groupKey] = [];
@@ -73,7 +147,7 @@ function generateBreakdown(filteredSubmissions: PriceSubmission[]): BreakdownIte
   });
 
   return Object.entries(descriptionGroups).map(([label, subs]) => {
-    const prices = subs.map(s => s.pricePaid).sort((a, b) => a - b);
+    const prices = subs.map(s => Number(s.price_paid)).sort((a, b) => a - b);
     return {
       label: label.charAt(0).toUpperCase() + label.slice(1),
       low: prices[0],
@@ -87,25 +161,24 @@ function generateBreakdown(filteredSubmissions: PriceSubmission[]): BreakdownIte
  * Calculate contractor scores
  */
 function calculateContractorScores(
-  filteredSubmissions: PriceSubmission[],
+  filteredSubmissions: DbSubmission[],
   areaAverage: number
 ): ContractorScore[] {
   const contractors: Record<string, { prices: number[]; count: number }> = {};
 
   filteredSubmissions.forEach(s => {
-    if (s.companyName) {
-      if (!contractors[s.companyName]) {
-        contractors[s.companyName] = { prices: [], count: 0 };
+    if (s.company_name) {
+      if (!contractors[s.company_name]) {
+        contractors[s.company_name] = { prices: [], count: 0 };
       }
-      contractors[s.companyName].prices.push(s.pricePaid);
-      contractors[s.companyName].count++;
+      contractors[s.company_name].prices.push(Number(s.price_paid));
+      contractors[s.company_name].count++;
     }
   });
 
   return Object.entries(contractors).map(([name, data]) => {
     const avgPrice = data.prices.reduce((a, b) => a + b, 0) / data.prices.length;
     const deviation = ((avgPrice - areaAverage) / areaAverage) * 100;
-    // Fairness score: 100 = exactly at average, decreases as deviation increases
     const fairnessScore = Math.max(0, Math.min(100, Math.round(100 - Math.abs(deviation) * 2)));
 
     return {
@@ -118,62 +191,291 @@ function calculateContractorScores(
 }
 
 /**
- * Main lookup function
+ * Generate monthly price history from submissions
  */
-export function lookupPrice(
-  serviceType: string,
-  zipCode: string,
-  userQuote?: number
-): LookupResult {
-  const normalizedService = serviceType.toLowerCase().trim();
-  const nearbyZips = getNearbyZips(zipCode);
+function generatePriceHistory(submissions: DbSubmission[]): PriceHistoryPoint[] {
+  if (submissions.length === 0) return [];
 
-  // Find matching submissions (fuzzy match on service type)
-  const filteredSubmissions = submissions.filter(s => {
-    const matchesService = s.serviceType.toLowerCase().includes(normalizedService) ||
-      normalizedService.includes(s.serviceType.toLowerCase());
-    const matchesArea = nearbyZips.includes(s.zipCode);
-    return matchesService && matchesArea;
+  const monthlyData: Record<string, { prices: number[]; count: number }> = {};
+
+  submissions.forEach(s => {
+    const date = new Date(s.submitted_at);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const monthLabel = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = { prices: [], count: 0 };
+    }
+    monthlyData[monthKey].prices.push(Number(s.price_paid));
+    monthlyData[monthKey].count++;
   });
 
-  const priceRange = calculatePriceRange(filteredSubmissions, userQuote);
-  const breakdown = generateBreakdown(filteredSubmissions);
-  const contractors = calculateContractorScores(filteredSubmissions, priceRange.average);
+  // Sort by month and return last 6 months
+  return Object.entries(monthlyData)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-6)
+    .map(([key, data]) => {
+      const [year, month] = key.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1);
+      return {
+        month: date.toLocaleString('default', { month: 'short' }),
+        average: Math.round(data.prices.reduce((a, b) => a + b, 0) / data.prices.length),
+        count: data.count,
+      };
+    });
+}
+
+/**
+ * Main lookup function - queries Supabase
+ */
+export async function lookupPrice(
+  serviceType: string,
+  zipCode: string,
+  userQuote?: number,
+  categoryId?: string,
+  units?: number
+): Promise<LookupResult> {
+  const normalizedService = serviceType.toLowerCase().trim();
+  const prefix = getZipPrefix(zipCode);
+
+  // Query Supabase for matching submissions
+  let query = supabase
+    .from('submissions')
+    .select('*')
+    .ilike('service_type', `%${normalizedService}%`)
+    .like('zip_code', `${prefix}%`);
+
+  if (categoryId) {
+    query = query.eq('category_id', categoryId);
+  }
+
+  const { data: filteredSubmissions, error } = await query;
+
+  if (error) {
+    console.error('Supabase query error:', error);
+  }
+
+  let submissions = (filteredSubmissions || []) as DbSubmission[];
+
+  // Fallback to local seed data if Supabase returned no results
+  // (e.g., env vars not configured, DB empty, or network issue)
+  if (submissions.length === 0) {
+    const localFiltered = localSubmissions.filter(s => {
+      const matchesService = s.serviceType.toLowerCase().includes(normalizedService) ||
+        normalizedService.includes(s.serviceType.toLowerCase());
+      const matchesZip = s.zipCode.startsWith(prefix);
+      const matchesCategory = categoryId ? s.categoryId === categoryId : true;
+      return matchesService && matchesZip && matchesCategory;
+    });
+
+    submissions = localFiltered.map(s => ({
+      id: s.id,
+      service_type: s.serviceType,
+      category_id: s.categoryId,
+      zip_code: s.zipCode,
+      price_paid: s.pricePaid,
+      units: null,
+      unit_type: null,
+      company_name: s.companyName || null,
+      job_description: s.jobDescription || null,
+      submitted_at: s.submittedAt,
+      trust_points: s.trustPoints,
+    }));
+  }
+
+  const priceRange = calculatePriceRange(submissions, userQuote);
+  const breakdown = generateBreakdown(submissions);
+  const contractors = calculateContractorScores(submissions, priceRange.average);
+  const currency = detectCurrency(zipCode);
+
+  // Calculate unit pricing if units provided
+  // Skip unit-based multiplication for categories where units are informational only
+  // (e.g., house rent — sq ft is context, not a price multiplier)
+  const skipUnitMultiplication = ['house-rent'];
+  const matchedCategoryId = categoryId || submissions[0]?.category_id || '';
+  const shouldSkipUnits = skipUnitMultiplication.includes(matchedCategoryId);
+
+  let unitPricing: UnitPricing | undefined;
+  if (units && units > 0 && priceRange.submissionCount > 0 && !shouldSkipUnits) {
+    let unitLabel = 'units';
+    for (const cat of categories) {
+      for (const sub of cat.subcategories) {
+        if (sub.unitConfig) {
+          const matchesSubService = sub.serviceTypes.some(st =>
+            st.toLowerCase().includes(normalizedService) ||
+            normalizedService.includes(st.toLowerCase())
+          );
+          if (matchesSubService) {
+            unitLabel = sub.unitConfig.unit;
+            break;
+          }
+        }
+      }
+    }
+
+    // Calculate per-unit rates from submissions that have unit data
+    const submissionsWithUnits = submissions.filter(s => s.units && Number(s.units) > 0);
+
+    let perUnitLow: number;
+    let perUnitAverage: number;
+    let perUnitHigh: number;
+
+    if (submissionsWithUnits.length > 0) {
+      // Use actual per-unit data from submissions (price / stored_units)
+      const perUnitPrices = submissionsWithUnits
+        .map(s => Number(s.price_paid) / Number(s.units))
+        .sort((a, b) => a - b);
+      perUnitLow = Math.round(perUnitPrices[0]);
+      perUnitHigh = Math.round(perUnitPrices[perUnitPrices.length - 1]);
+      perUnitAverage = Math.round(perUnitPrices.reduce((a, b) => a + b, 0) / perUnitPrices.length);
+    } else {
+      // No unit data stored — estimate by dividing total price by a reasonable default
+      // This is a fallback; ideally all submissions should have units
+      perUnitLow = priceRange.low;
+      perUnitAverage = priceRange.average;
+      perUnitHigh = priceRange.high;
+    }
+
+    unitPricing = {
+      units,
+      unitLabel,
+      perUnitLow,
+      perUnitAverage,
+      perUnitHigh,
+      totalEstimateLow: Math.round(perUnitLow * units),
+      totalEstimateAverage: Math.round(perUnitAverage * units),
+      totalEstimateHigh: Math.round(perUnitHigh * units),
+    };
+
+    // Override main price range with unit-adjusted values
+    // so the price bar shows the correct price for the requested size
+    priceRange.low = Math.round(perUnitLow * units);
+    priceRange.average = Math.round(perUnitAverage * units);
+    priceRange.high = Math.round(perUnitHigh * units);
+
+    // Re-evaluate verdict against adjusted average
+    if (userQuote !== undefined) {
+      const adjThreshold10 = priceRange.average * 1.1;
+      const adjThreshold25 = priceRange.average * 1.25;
+      if (userQuote <= adjThreshold10) {
+        priceRange.verdict = 'FAIR';
+      } else if (userQuote <= adjThreshold25) {
+        priceRange.verdict = 'A_BIT_HIGH';
+      } else {
+        priceRange.verdict = 'OVERPRICED';
+      }
+    }
+  }
+
+  // Generate price history (group by month)
+  const priceHistory = generatePriceHistory(submissions);
+
+  // Calculate data freshness metadata
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+  const staleCount = submissions.filter(s => new Date(s.submitted_at) < twelveMonthsAgo).length;
+
+  const dataFreshness: DataFreshness = {
+    status: getDataFreshnessStatus(submissions),
+    lastUpdated: getLastUpdatedDate(submissions),
+    freshness: priceRange.freshness,
+    totalSubmissions: submissions.length,
+    staleCount,
+  };
 
   return {
     serviceType: normalizedService,
     zipCode,
+    currency,
     priceRange,
+    unitPricing,
+    priceHistory,
     breakdown,
     contractors,
-    recentSubmissions: filteredSubmissions.slice(0, 5),
+    dataFreshness,
+    recentSubmissions: submissions.slice(0, 5).map(s => ({
+      id: s.id,
+      serviceType: s.service_type,
+      categoryId: s.category_id,
+      zipCode: s.zip_code,
+      pricePaid: Number(s.price_paid),
+      companyName: s.company_name || undefined,
+      jobDescription: s.job_description || undefined,
+      submittedAt: s.submitted_at,
+      trustPoints: s.trust_points,
+    })),
   };
 }
 
 /**
- * Search available services
+ * Search available services from database
  */
-export function searchServices(query: string): string[] {
+export async function searchServices(query: string): Promise<string[]> {
   const normalizedQuery = query.toLowerCase().trim();
-  const allServices = [...new Set(submissions.map(s => s.serviceType))];
 
-  if (!normalizedQuery) return allServices;
+  const { data, error } = await supabase
+    .from('submissions')
+    .select('service_type')
+    .ilike('service_type', `%${normalizedQuery}%`)
+    .limit(20);
 
-  return allServices.filter(service =>
-    service.includes(normalizedQuery) || normalizedQuery.includes(service)
-  );
+  if (error || !data || data.length === 0) {
+    // Fallback to local seed data
+    const localMatches = localSubmissions
+      .filter(s => s.serviceType.toLowerCase().includes(normalizedQuery))
+      .map(s => s.serviceType);
+    return Array.from(new Set(localMatches));
+  }
+
+  // Deduplicate
+  return Array.from(new Set(data.map(d => d.service_type)));
 }
 
 /**
- * Add a new submission
+ * Add a new submission to Supabase
  */
-export function addSubmission(submission: Omit<PriceSubmission, 'id' | 'submittedAt' | 'trustPoints'>): PriceSubmission {
-  const newSubmission: PriceSubmission = {
-    ...submission,
-    id: String(submissions.length + 1),
-    submittedAt: new Date().toISOString().split('T')[0],
-    trustPoints: 10,
+export async function addSubmission(submission: {
+  serviceType: string;
+  categoryId: string;
+  zipCode: string;
+  pricePaid: number;
+  units?: number;
+  unitType?: string;
+  companyName?: string;
+  jobDescription?: string;
+  userEmail?: string;
+}) {
+  const { data, error } = await supabase
+    .from('submissions')
+    .insert({
+      service_type: submission.serviceType,
+      category_id: submission.categoryId,
+      zip_code: submission.zipCode,
+      price_paid: submission.pricePaid,
+      units: submission.units || null,
+      unit_type: submission.unitType || null,
+      company_name: submission.companyName || null,
+      job_description: submission.jobDescription || null,
+      user_email: submission.userEmail || null,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    id: data.id,
+    serviceType: data.service_type,
+    categoryId: data.category_id,
+    zipCode: data.zip_code,
+    pricePaid: Number(data.price_paid),
+    units: data.units ? Number(data.units) : undefined,
+    unitType: data.unit_type || undefined,
+    companyName: data.company_name || undefined,
+    jobDescription: data.job_description || undefined,
+    submittedAt: data.submitted_at,
+    trustPoints: data.trust_points,
   };
-  submissions.push(newSubmission);
-  return newSubmission;
 }

@@ -1,0 +1,170 @@
+service_type,category_id,zip_code,price_paid,units,unit_type,company_name,job_description
+ac deep cleaning,hvac,110001,1299,1,ACs,Urban Company,Window AC deep cleaning Delhi
+ac deep cleaning,hvac,400001,1399,1,ACs,Urban Company,Window AC deep cleaning Mumbai
+ac deep cleaning,hvac,560001,1199,1,ACs,HomeCare,Window AC deep cleaning Bangalore
+ac deep cleaning,hvac,600001,1099,1,ACs,Urban Company,Window AC deep cleaning Chennai
+ac deep cleaning,hvac,500001,1099,1,ACs,Urban Company,Window AC deep cleaning Hyderabad
+ac repair,hvac,110001,1800,1,ACs,Urban Company,PCB repair split AC
+ac repair,hvac,110001,3500,1,ACs,CoolFix,Compressor repair 1.5 ton
+ac repair,hvac,400001,2000,1,ACs,Mumbai Cool Tech,Fan motor replacement
+ac repair,hvac,560001,1500,1,ACs,Local Technician,Capacitor replacement
+ac installation,hvac,400001,1899,1,ACs,Urban Company,Split AC install Mumbai 5ft pipe
+ac installation,hvac,560001,1699,1,ACs,Urban Company,Split AC install Bangalore
+ac installation,hvac,122001,1799,1,ACs,Urban Company,Split AC install Gurgaon
+bathroom cleaning,cleaning,110001,999,1,areas,Urban Company,Single bathroom deep clean
+bathroom cleaning,cleaning,400001,1099,1,areas,Urban Company,Single bathroom Mumbai
+kitchen deep clean,cleaning,110001,1499,1,areas,Urban Company,Kitchen with chimney cleaning
+kitchen deep clean,cleaning,400001,1699,1,areas,Urban Company,Kitchen cleaning Mumbai
+carpet cleaning,cleaning,110001,1499,3,items,Urban Company,3 room carpet shampooing
+carpet cleaning,cleaning,400001,1699,3,items,Urban Company,3 room carpet Mumbai
+mattress cleaning,cleaning,110001,599,1,items,Urban Company,Queen size mattress cleaning
+mattress cleaning,cleaning,560001,599,1,items,Urban Company,Queen mattress Bangalore
+post-construction cleaning,cleaning,110001,6999,2,BHK,Urban Company,2BHK post renovation
+post-construction cleaning,cleaning,400001,7999,2,BHK,HouseJoy,2BHK post renovation Mumbai
+move-out cleaning,cleaning,110001,3999,2,BHK,Urban Company,2BHK end of lease cleaning
+move-out cleaning,cleaning,560001,3499,2,BHK,Urban Company,2BHK move-out Bangalore
+bed bug treatment,pest-control,110001,2499,2,rooms,Urban Company,2 room heat treatment
+bed bug treatment,pest-control,400001,2799,2,rooms,Hicare,2 room treatment Mumbai
+bed bug treatment,pest-control,560001,2299,2,rooms,Urban Company,2 room Bangalore
+rat control,pest-control,110001,1799,2,BHK,Urban Company,2BHK rodent proofing
+rat control,pest-control,400001,1999,2,BHK,Hicare,2BHK Mumbai
+rat control,pest-control,560001,1599,2,BHK,Urban Company,2BHK Bangalore
+mosquito fogging,pest-control,110001,999,2,BHK,Urban Company,2BHK fogging treatment
+mosquito fogging,pest-control,400001,1099,2,BHK,Hicare,2BHK fogging Mumbai
+exterior painting,home-exterior,110001,35000,1000,sq ft,Asian Paints,Exterior weather proof
+exterior painting,home-exterior,400001,40000,1000,sq ft,Asian Paints,Exterior Mumbai
+exterior painting,home-exterior,560001,32000,1000,sq ft,Berger Paints,Exterior Bangalore
+wall texture,home-exterior,110001,4500,100,sq ft,Asian Paints,Texture per 100 sqft
+wall texture,home-exterior,400001,5000,100,sq ft,Asian Paints,Texture Mumbai
+bathroom waterproofing,home-exterior,110001,8000,50,sq ft,Dr Fixit,Single bathroom
+bathroom waterproofing,home-exterior,400001,9000,50,sq ft,Pidilite,Single bathroom Mumbai
+bathroom waterproofing,home-exterior,560001,7000,50,sq ft,Local Contractor,Single bathroom Bangalore
+pipe replacement,plumbing,110001,2500,10,ft,Urban Company,10ft CPVC pipe replacement
+pipe replacement,plumbing,400001,3000,10,ft,Local Plumber,10ft pipe Mumbai
+toilet installation,plumbing,110001,2999,1,fixtures,Urban Company,Western commode install
+toilet installation,plumbing,400001,3499,1,fixtures,Local Plumber,Commode install Mumbai
+toilet installation,plumbing,560001,2799,1,fixtures,Urban Company,Commode install Bangalore
+faucet repair,plumbing,110001,399,1,leaks,Urban Company,Tap washer replacement
+faucet repair,plumbing,400001,499,1,leaks,Urban Company,Tap repair Mumbai
+faucet repair,plumbing,560001,399,1,leaks,Urban Company,Tap repair Bangalore
+faucet repair,plumbing,600001,349,1,leaks,Local Plumber,Tap repair Chennai
+faucet repair,plumbing,500001,349,1,leaks,Urban Company,Tap repair Hyderabad
+faucet repair,plumbing,700001,299,1,leaks,Local Plumber,Tap repair Kolkata
+MCB installation,electrical,110001,1500,1,units,Urban Company,MCB box with 6 circuits
+MCB installation,electrical,400001,1800,1,units,Local Electrician,MCB box Mumbai
+light fixture install,electrical,110001,499,1,lights,Urban Company,Ceiling fan installation
+light fixture install,electrical,400001,599,1,lights,Urban Company,Fan install Mumbai
+light fixture install,electrical,560001,449,1,lights,Urban Company,Fan install Bangalore
+light fixture install,electrical,110001,999,4,lights,Urban Company,4 LED downlight install
+chandelier installation,electrical,110001,1999,1,lights,Urban Company,Large chandelier setup
+inverter installation,electrical,400001,2499,1,units,Urban Company,Inverter install Mumbai
+inverter installation,electrical,560001,1999,1,units,Urban Company,Inverter install Bangalore
+inverter installation,electrical,600001,1799,1,units,Local Electrician,Inverter Chennai
+battery replacement,electrical,110001,999,1,units,Urban Company,Inverter battery swap
+battery replacement,electrical,400001,1199,1,units,Urban Company,Battery swap Mumbai
+engine oil change,auto-repair,110001,1499,1,units,GoMechanic,Synthetic oil + filter
+engine oil change,auto-repair,400001,1699,1,units,GoMechanic,Synthetic oil Mumbai
+engine oil change,auto-repair,560001,1499,1,units,GoMechanic,Synthetic oil Bangalore
+tyre replacement,auto-repair,400001,5000,1,units,CEAT Dealer,Single tyre 185/65 R15 Mumbai
+tyre replacement,auto-repair,560001,4500,1,units,Apollo Dealer,Single tyre Bangalore
+wheel alignment,auto-repair,400001,899,1,units,GoMechanic,Wheel alignment Mumbai
+wheel alignment,auto-repair,560001,799,1,units,GoMechanic,Wheel alignment Bangalore
+car ac gas refill,auto-repair,400001,3299,1,units,GoMechanic,Full AC gas Mumbai
+car ac gas refill,auto-repair,560001,2999,1,units,GoMechanic,Full AC gas Bangalore
+brake pads replacement,auto-repair,400001,2999,1,units,GoMechanic,Front pads Mumbai
+brake pads replacement,auto-repair,560001,2499,1,units,GoMechanic,Front pads Bangalore
+brake pads replacement,auto-repair,600001,2299,1,units,Local Garage,Front pads Chennai
+brake pads replacement,auto-repair,500001,2299,1,units,GoMechanic,Front pads Hyderabad
+brake pads replacement,auto-repair,411001,2499,1,units,GoMechanic,Front pads Pune
+dental crown,dental,110001,8000,1,crowns,Clove Dental,Ceramic crown Delhi
+dental crown,dental,110001,15000,1,crowns,Max Dental,Zirconia crown premium
+dental crown,dental,400001,9000,1,crowns,Sabka Dentist,Ceramic crown Mumbai
+dental crown,dental,560001,7000,1,crowns,Clove Dental,Ceramic crown Bangalore
+dental crown,dental,600001,6000,1,crowns,Local Dentist,Ceramic crown Chennai
+dental crown,dental,500001,7000,1,crowns,Clove Dental,Ceramic crown Hyderabad
+dental cleaning,dental,400001,1299,1,teeth,Sabka Dentist,Scaling Mumbai
+dental cleaning,dental,560001,999,1,teeth,Clove Dental,Scaling Bangalore
+dental cleaning,dental,600001,799,1,teeth,Local Dentist,Scaling Chennai
+dental cleaning,dental,500001,899,1,teeth,Clove Dental,Scaling Hyderabad
+dental cleaning,dental,700001,699,1,teeth,Local Dentist,Scaling Kolkata
+dental cleaning,dental,411001,999,1,teeth,Sabka Dentist,Scaling Pune
+dental cleaning,dental,302001,599,1,teeth,Local Dentist,Scaling Jaipur
+dental implant,dental,400001,30000,1,implants,Sabka Dentist,Single implant Mumbai
+dental implant,dental,560001,22000,1,implants,Clove Dental,Single implant Bangalore
+dental implant,dental,600001,20000,1,implants,Local Dental,Single implant Chennai
+tooth extraction,dental,110001,1500,1,teeth,Clove Dental,Simple extraction Delhi
+tooth extraction,dental,400001,1800,1,teeth,Sabka Dentist,Simple extraction Mumbai
+wisdom tooth removal,dental,110001,5000,1,teeth,Max Dental,Surgical extraction Delhi
+wisdom tooth removal,dental,400001,6000,1,teeth,Sabka Dentist,Surgical Mumbai
+intercity move,moving,110001,15000,1,BHK,Agarwal Packers,Delhi to Jaipur 1BHK
+intercity move,moving,110001,25000,2,BHK,Agarwal Packers,Delhi to Mumbai 2BHK
+intercity move,moving,400001,18000,1,BHK,Leo Packers,Mumbai to Pune 1BHK
+intercity move,moving,560001,20000,1,BHK,Agarwal Packers,Bangalore to Chennai 1BHK
+packing service,moving,110001,3000,2,rooms,Porter,2 room packing Delhi
+packing service,moving,400001,3500,2,rooms,Porter,2 room packing Mumbai
+local move,moving,380001,3499,1,BHK,Local Packers,1BHK Ahmedabad 10km
+local move,moving,302001,3999,2,BHK,Local Packers,2BHK Jaipur 12km
+local move,moving,226001,3499,2,BHK,Local Movers,2BHK Lucknow 10km
+tile installation,interior-design,110001,55,100,sq ft,Local Contractor,Vitrified tiles per sqft Delhi
+tile installation,interior-design,400001,65,100,sq ft,Local Contractor,Vitrified tiles Mumbai
+tile installation,interior-design,560001,50,100,sq ft,Local Contractor,Vitrified tiles Bangalore
+wooden flooring,interior-design,110001,180,100,sq ft,Floor & Decor,Engineered wood per sqft
+wooden flooring,interior-design,400001,200,100,sq ft,Floor & Decor,Engineered wood Mumbai
+marble polishing,interior-design,110001,25,100,sq ft,Stone Care India,Diamond polishing per sqft
+marble polishing,interior-design,400001,30,100,sq ft,Mumbai Stone Polish,Polishing per sqft
+wallpaper installation,interior-design,110001,80,100,sq ft,Urban Company,Standard wallpaper per sqft
+wallpaper installation,interior-design,400001,90,100,sq ft,Local Interior,Wallpaper Mumbai
+kitchen countertop,interior-design,110001,35000,20,sq ft,Local Contractor,Granite L-shape
+kitchen countertop,interior-design,400001,40000,20,sq ft,Local Contractor,Granite countertop Mumbai
+POP ceiling,interior-design,110001,9000,100,sq ft,Local Contractor,POP design 100 sqft
+POP ceiling,interior-design,400001,11000,100,sq ft,Mumbai Interior,POP ceiling Mumbai
+POP ceiling,interior-design,560001,8500,100,sq ft,Local Contractor,POP ceiling Bangalore
+modular kitchen,interior-design,411001,100000,60,sq ft,HomeLane,Straight kitchen Pune
+modular kitchen,interior-design,302001,75000,60,sq ft,Local Interior,Straight kitchen Jaipur
+modular kitchen,interior-design,122001,130000,60,sq ft,Livspace,Straight kitchen Gurgaon
+modular kitchen,interior-design,201301,125000,60,sq ft,HomeLane,Straight kitchen Noida
+furniture assembly,carpentry,110001,799,1,items,Urban Company,Bed assembly
+furniture assembly,carpentry,110001,1299,2,items,Urban Company,Wardrobe + desk assembly
+furniture repair,carpentry,110001,1500,1,items,Urban Company,Sofa reupholstery minor
+furniture repair,carpentry,400001,1800,1,items,Local Carpenter,Chair repair Mumbai
+wood polish,carpentry,110001,5000,4,items,Urban Company,4 piece bedroom set polish
+wood polish,carpentry,400001,6000,4,items,Local Carpenter,4 piece polish Mumbai
+door repair,carpentry,110001,1200,1,units,Urban Company,Door hinge + alignment
+door repair,carpentry,400001,1500,1,units,Local Carpenter,Door repair Mumbai
+door installation,carpentry,110001,4500,1,units,Local Carpenter,Flush door with frame
+door installation,carpentry,400001,5500,1,units,Local Carpenter,Flush door Mumbai
+TV unit,carpentry,110001,25000,1,units,HomeLane,Wall mounted TV unit laminate
+TV unit,carpentry,400001,28000,1,units,HomeLane,TV unit Mumbai
+bookshelf making,carpentry,110001,18000,1,units,Local Carpenter,Floor to ceiling pine
+bookshelf making,carpentry,560001,15000,1,units,Local Carpenter,Bookshelf Bangalore
+alarm system install,home-security,110001,4999,8,sensors,Local Vendor,8 sensor wireless alarm
+video doorbell install,home-security,110001,2999,1,units,Urban Company,WiFi doorbell with install
+video doorbell install,home-security,400001,3299,1,units,Urban Company,Doorbell Mumbai
+lock replacement,home-security,110001,1299,1,locks,Urban Company,Mortise lock replacement
+lock replacement,home-security,400001,1499,1,locks,Local Locksmith,Lock replacement Mumbai
+DVR installation,home-security,110001,3999,1,units,SecureHome,4 channel DVR setup
+cctv installation,home-security,201301,8499,4,cameras,Local Vendor,4 camera Noida
+cctv installation,home-security,122001,9499,4,cameras,Local Vendor,4 camera Gurgaon
+fridge compressor repair,appliance-repair,110001,4500,1,units,Urban Company,Compressor replacement
+fridge compressor repair,appliance-repair,400001,5000,1,units,Local Technician,Compressor Mumbai
+fridge gas refill,appliance-repair,110001,1800,1,units,Urban Company,Gas refill + leak check
+fridge gas refill,appliance-repair,400001,2000,1,units,Local Service,Gas refill Mumbai
+washing machine service,appliance-repair,110001,699,1,units,Urban Company,Deep clean descaling
+washing machine service,appliance-repair,400001,799,1,units,Urban Company,Service Mumbai
+dishwasher repair,appliance-repair,110001,2500,1,units,Urban Company,Spray arm replacement
+microwave repair,appliance-repair,110001,1500,1,units,Urban Company,Magnetron replacement
+microwave repair,appliance-repair,400001,1800,1,units,Local Service,Magnetron Mumbai
+water purifier service,appliance-repair,110001,1999,1,units,Aquaguard,Full overhaul all filters
+water purifier service,appliance-repair,400001,2199,1,units,Aquaguard,Full overhaul Mumbai
+water purifier service,appliance-repair,560001,1799,1,units,Pureit,Full service Bangalore
+filter replacement,appliance-repair,110001,899,1,units,Kent Service,Sediment + carbon
+filter replacement,appliance-repair,400001,999,1,units,Kent Service,Filter change Mumbai
+lawn mowing,landscaping,110001,500,1000,sq ft,Local Gardener,Monthly lawn maintenance
+lawn mowing,landscaping,122001,800,1000,sq ft,Local Gardener,Lawn mowing Gurgaon
+tree trimming,landscaping,110001,2000,1,trees,Local Gardener,Medium tree crown reduction
+tree trimming,landscaping,400001,2500,1,trees,Local Service,Tree trimming Mumbai
+tree removal,landscaping,110001,5000,1,trees,Local Service,Medium tree complete removal
+garden design,landscaping,110001,15000,200,sq ft,Green Thumb,Small garden landscaping
+garden design,landscaping,122001,20000,200,sq ft,Local Landscaper,Garden design Gurgaon
+drip irrigation,landscaping,110001,8000,4,zones,Local Gardener,4 zone drip system
+sprinkler install,landscaping,122001,12000,4,zones,Local Landscaper,Sprinkler Gurgaon

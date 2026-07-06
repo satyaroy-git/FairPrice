@@ -34,13 +34,49 @@ export interface ContractorScore {
   averageDeviation: number; // % above/below area average
 }
 
+export interface CurrencyInfo {
+  code: string;
+  symbol: string;
+  locale: string;
+  country: string;
+}
+
+export interface UnitPricing {
+  units: number;
+  unitLabel: string;
+  perUnitLow: number;
+  perUnitAverage: number;
+  perUnitHigh: number;
+  totalEstimateLow: number;
+  totalEstimateAverage: number;
+  totalEstimateHigh: number;
+}
+
+export interface PriceHistoryPoint {
+  month: string;
+  average: number;
+  count: number;
+}
+
+export interface DataFreshness {
+  status: 'fresh' | 'recent' | 'aging' | 'stale';
+  lastUpdated?: string; // ISO date of most recent submission
+  freshness: number; // % of submissions within 6 months
+  totalSubmissions: number;
+  staleCount: number; // submissions older than 12 months
+}
+
 export interface LookupResult {
   serviceType: string;
   zipCode: string;
+  currency: CurrencyInfo;
   priceRange: PriceRange;
+  unitPricing?: UnitPricing;
+  priceHistory: PriceHistoryPoint[];
   breakdown: BreakdownItem[];
   contractors: ContractorScore[];
   recentSubmissions: PriceSubmission[];
+  dataFreshness: DataFreshness;
 }
 
 export interface BreakdownItem {
