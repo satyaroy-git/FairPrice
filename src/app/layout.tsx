@@ -37,10 +37,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta name="theme-color" content="#1a5c5c" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        {/* Google AdSense Script - Replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID */}
+        {/* Google AdSense Script */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4341893599860053"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
