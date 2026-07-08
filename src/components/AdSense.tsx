@@ -54,7 +54,7 @@ export default function AdSense({
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client="ca-pub-4341893599860053"
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={fullWidth ? 'true' : 'false'}
@@ -90,7 +90,7 @@ export function InArticleAd({ adSlot, className = '' }: { adSlot: string; classN
       <ins
         className="adsbygoogle"
         style={{ display: 'block', textAlign: 'center' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client="ca-pub-4341893599860053"
         data-ad-slot={adSlot}
         data-ad-layout="in-article"
         data-ad-format="fluid"
@@ -126,7 +126,7 @@ export function MultiplexAd({ adSlot, className = '' }: { adSlot: string; classN
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client="ca-pub-4341893599860053"
         data-ad-slot={adSlot}
         data-ad-format="autorelaxed"
       />
