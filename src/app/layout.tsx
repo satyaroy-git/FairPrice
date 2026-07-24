@@ -59,13 +59,16 @@ export default function RootLayout({
                 <a href="/lookup" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Lookup
                 </a>
-                <a href="/contractors" className="hidden sm:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                <a href="/blog" className="hidden sm:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                  Blog
+                </a>
+                <a href="/contractors" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   For Contractors
                 </a>
-                <a href="/about" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                <a href="/about" className="hidden lg:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   About
                 </a>
-                <a href="/contact" className="hidden md:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                <a href="/contact" className="hidden lg:inline text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors">
                   Contact
                 </a>
                 <a href="/submit" className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 rounded-lg transition-colors">
@@ -99,8 +102,9 @@ export default function RootLayout({
                 <h3 className="text-white font-semibold mb-3">Company</h3>
                 <ul className="space-y-2 text-sm">
                   <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
+                  <li><a href="/blog" className="hover:text-white transition-colors">Blog</a></li>
+                  <li><a href="/methodology" className="hover:text-white transition-colors">Our Methodology</a></li>
                   <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
-                  <li><a href="/admin" className="hover:text-white transition-colors">Admin</a></li>
                 </ul>
               </div>
               <div>
