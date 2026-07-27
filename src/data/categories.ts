@@ -157,7 +157,7 @@ export const categories: CategoryWithSubs[] = [
     subcategories: [
       { id: 'deep-clean', name: 'Deep Cleaning', serviceTypes: ['deep cleaning', 'full house cleaning', 'spring cleaning', 'post-construction cleaning'], unitConfig: { label: 'Home size (BHK)', unit: 'BHK', placeholder: 'e.g., 2', options: [1, 2, 3, 4, 5] } },
       { id: 'carpet-sofa', name: 'Carpet & Sofa', serviceTypes: ['carpet cleaning', 'sofa cleaning', 'upholstery cleaning', 'mattress cleaning'], unitConfig: { label: 'Number of items', unit: 'items', placeholder: 'e.g., 1', options: [1, 2, 3, 4, 5] } },
-      { id: 'kitchen-bath', name: 'Kitchen & Bathroom', serviceTypes: ['kitchen deep clean', 'bathroom cleaning', 'chimney cleaning', 'exhaust fan cleaning'], unitConfig: { label: 'Number of areas', unit: 'areas', placeholder: 'e.g., 2', options: [1, 2, 3, 4] } },
+      { id: 'kitchen-bath', name: 'Kitchen & Bathroom', serviceTypes: ['kitchen deep clean', 'bathroom cleaning', 'chimney cleaning', 'exhaust fan cleaning'], unitConfig: { label: 'Area size (sq ft)', unit: 'sq ft', placeholder: 'e.g., 80', options: [40, 60, 80, 100, 120, 150] } },
       { id: 'tank-clean', name: 'Tank & Overhead', serviceTypes: ['water tank cleaning', 'overhead tank cleaning', 'sump cleaning'], unitConfig: { label: 'Tank capacity (liters)', unit: 'L', placeholder: 'e.g., 1000', options: [500, 1000, 2000, 5000] } },
       { id: 'move-clean', name: 'Move-in/Move-out', serviceTypes: ['move-out cleaning', 'move-in cleaning', 'end of lease cleaning'], unitConfig: { label: 'Home size (BHK)', unit: 'BHK', placeholder: 'e.g., 2', options: [1, 2, 3, 4] } },
     ],
