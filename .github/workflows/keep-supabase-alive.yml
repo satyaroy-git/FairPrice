@@ -1,0 +1,41 @@
+name: Keep Supabase Alive
+
+# Runs once daily at 6:00 AM IST (00:30 UTC)
+on:
+  schedule:
+    - cron: '30 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase to prevent pausing
+        run: |
+          echo "Pinging Supabase to keep it alive..."
+
+          # Simple SELECT query to keep the database active
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://avutbqqvalqaubacxypa.supabase.co/rest/v1/submissions?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+
+          echo "Response status: $RESPONSE"
+
+          if [ "$RESPONSE" -eq 200 ]; then
+            echo "✅ Supabase is alive and responding!"
+          else
+            echo "⚠️ Unexpected response: $RESPONSE"
+            exit 1
+          fi
+
+      - name: Ping website to keep Netlify warm
+        run: |
+          SITE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://getfairprice.in")
+          echo "Site status: $SITE_STATUS"
+
+          if [ "$SITE_STATUS" -eq 200 ]; then
+            echo "✅ Website is live!"
+          else
+            echo "⚠️ Website returned: $SITE_STATUS"
+          fi
